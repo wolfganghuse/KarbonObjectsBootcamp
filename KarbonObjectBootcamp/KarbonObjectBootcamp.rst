@@ -3,12 +3,13 @@
 .. role::   raw-html(raw)
       :format: html
 
-Karbon + Object Bootcamp
-========================
+Advanced Boocamp (Automation) (Instructor only)
+===============================================
 
 Table of Content
+----------------
 
-`POC preparation guide and notes: <#poc-preparation-guide-and-notes>`__
+   `POC preparation guide and notes <#poc-preparation-guide-and-notes>`__
 
    `HPOC Reservation instructions (several days
    before) <#hpoc-reservation-instructions-several-days-before>`__
@@ -16,13 +17,13 @@ Table of Content
    `Bootcamp Preparation (the day
    before) <#bootcamp-preparation-the-day-before>`__
 
-`Topic <#topic>`__
+   `Topic <#topic>`__
 
-`Goal <#goal>`__
+   `Goal <#goal>`__
 
-`Design <#design>`__
+   `Design <#design>`__
 
-`Deployment <#deployment>`__
+   `Deployment <#deployment>`__
 
    `Objects <#objects>`__
 
@@ -57,11 +58,10 @@ Table of Content
    `Manage your Kubernetes Cluster with LENS
    IDE <#manage-your-kubernetes-cluster-with-lens-ide>`__
 
-POC preparation guide and notes:
-================================
+POC preparation guide and notes
+-------------------------------
 
 HPOC Reservation instructions (several days before)
----------------------------------------------------
 
 When reserving the HPOC:
 
@@ -549,9 +549,11 @@ The following key are used for this POC :
 | eNEgr8iuFFDoPA23vaPzcZR3hbsICOw7yoFbAsL+z+Mc6O74Nj7bT6WX3rVgMCFFYQ== |
 +----------------------------------------------------------------------+
 
-Topic
-=====
+Advanced Bootcamp (Automation)
+==============================
 
+Topics
+------
 -  Nutanix Karbon
 
 -  Nutanix Object
@@ -559,7 +561,7 @@ Topic
 -  Nutanix Era
 
 Goal
-====
+----
 
 Setup a fully working NextCloud solution, highly available, hosted on a
 Kubernetes cluster.
@@ -571,7 +573,7 @@ An object storage solution, deployed with Nutanix Object will be used as
 an external repository, setup on the NextCloud platform.
 
 Design
-======
+------
 
 Global architecture
 
@@ -582,7 +584,7 @@ Kubernetes Storage Access
 |image1|
 
 Deployment
-==========
+----------
 
 Connect to your Frame Desktop, using the Frame Jumphost URL, your Frame
 User and the Frame Jumphost Password as provided in Ressources lab
@@ -607,54 +609,46 @@ Objects
 -------
 
 -  With Google Chrome, **connect** to the **Prism Central** (as provided
-      in Ressources lab document), click on the\ |image4| Burger
-      Menu,click **Services**, click **Objects**
-
+   in Ressources lab document), click on the\ |image4| Burger Menu,click 
+   **Services**, click **Objects**
 -  Click **Create Object Store** / Continue
-
 -  Enter an object store name based as provided in Ressources lab
-      document / next
-
+   document / next
 -  Select performance (Estimated) to Custom. It will deploy a very small
-      object instance to save cluster resources for other LAB
-      participants.(don’t change vCPU or Memory)
-
+   object instance to save cluster resources for other LAB
+   participants.(don’t change vCPU or Memory)
 -  Set 100 GiB as capacity / Next
-
 -  Select **your corresponding** Nutanix Cluster
-
 -  Select Managed-Network for both Object Infra Network and Objects
-      Public Network. Enter the Objects Infra IPs and Object Public IPs
-      with the information provided in Ressources lab document. **Do not
-      deploy it**
+   Public Network. Enter the Objects Infra IPs and Object Public IPs
+   with the information provided in Ressources lab document. **Do not
+   deploy it**
 
 Karbon/Kubernetes Cluster
 -------------------------
 
 -  Go to **Prism Central**, click on the |image5|\ Burger Menu, click
-      Services, click Karbon
-
+   Services, click Karbon
 -  Click **create a Kubernetes Cluster**
-
--  Select **Production Cluster** / Next
+-  Select **Production Cluster** / Next 
 
 -  **Node-Configuration**
-
+  
    -  Enter a name, as provided in Ressources lab document, and select
-         **your corresponding** Nutanix Cluster / Next (leave k8s and
-         Host OS out for now)
+      **your corresponding** Nutanix Cluster / Next 
+      **(leave k8s and Host OS out for now)**
 
 -  **Network**
 
    -  Select the network named Managed-Network
 
    -  Enter a master VIP Address (as provided in Ressources lab
-         document) / Next
+      document) / Next
 
    -  Keep the Flannel Network Provider
 
-      -  Note:(Calico is supported as well, but requires additional
-            steps).
+   -  Note:(Calico is supported as well, but requires additional
+      steps).
 
    -  Keep the CIDR range by default / Next
 
@@ -663,19 +657,21 @@ Karbon/Kubernetes Cluster
    -  Select once again **your corresponding** Nutanix Cluster
 
    -  Enter the cluster username (admin) and password (Nutanix Password
-         in the ressources lab document) / Create. Click only once on
-         the create button, and wait the popup to be closed, otherwise,
-         you’ll deploy multiple time the cluster and the deployment will
-         fail!!!
+      in the ressources lab document) / Create. Click only once on
+      the create button, and wait the popup to be closed, otherwise,
+      you’ll deploy multiple time the cluster and the deployment will
+      fail!!!
 
--  Wait for the deployment completion. It will take around 15 minutes to
-      complete, go to the next section in the meanwhile
+.. hint::
+
+    Wait for the deployment completion. It will take around 15 minutes to 
+    complete, go to the next section in the meanwhile
 
 Era
 ---
 
 -  Open a new tab, and access the Era IP Address Server as provided in
-      Ressources lab document
+   Ressources lab document
 
 -  Click to Dashboard on the top left section / Databases
 
@@ -694,17 +690,12 @@ Era
    -  Network Profile : MariaNW
 
    -  SSH KEY : Select Text, and copy paste the following string (it’s a
-         one line text!)
+      one line text!)
 
-+----------------------------------------------------------------------+
-| ssh-rsa                                                              |
-| AAAAB3NzaC1yc2EAAAABJQAAAQEAiC8r                                     |
-| 6cLFLn/c/iR8TKXQhN20wUQwua8DSZM7rpGwuxbgLSSznW/hEVIogx3UoRamU3lIDsD8 |
-| QKLBiHg29xc/PvR/Ro5Fxvhih3XOQTC14cEwPvgXgMHgPBJ5Vw+bW3a8HVM3S4dsaCsY |
-| AkDeHJmXP4G7HN4vrqc3fjb1UYV3iUe8AcheKzD7sG8MSjFBPc7WVI0I47Ly/eKVxVp0 |
-| csE0fUH6IogUMqA1zp/C/uziAG1vZO6Td2S/FW70OKnCnnNRN8+e7BNlrIuy/0fLsKjU |
-| eNEgr8iuFFDoPA23vaPzcZR3hbsICOw7yoFbAsL+z+Mc6O74Nj7bT6WX3rVgMCFFYQ== |
-+----------------------------------------------------------------------+
+.. code-block:: Bash
+    
+    ssh-rsa AAAAB3NzaC1yc2EAAAABJQAAAQEAiC8r6cLFLn/c/iR8TKXQhN20wUQwua8DSZM7rpGwuxbgLSSznW/hEVIogx3UoRamU3lIDsD8QKLBiHg29xc/PvR/Ro5Fxvhih3XOQTC14cEwPvgXgMHgPBJ5Vw+bW3a8HVM3S4dsaCsYAkDeHJmXP4G7HN4vrqc3fjb1UYV3iUe8AcheKzD7sG8MSjFBPc7WVI0I47Ly/eKVxVp0csE0fUH6IogUMqA1zp/C/uziAG1vZO6Td2S/FW70OKnCnnNRN8+e7BNlrIuy/0fLsKjUeNEgr8iuFFDoPA23vaPzcZR3hbsICOw7yoFbAsL+z+Mc6O74Nj7bT6WX3rVgMCFFYQ==
+
 
 https://karbon-bootcamp.s3.eu-west-3.amazonaws.com/ssh-public-key.txt
 
@@ -728,54 +719,62 @@ https://karbon-bootcamp.s3.eu-west-3.amazonaws.com/ssh-public-key.txt
 
 -  Do not close the browser TAB
 
-It will take around 10 minutes to deploy the MariaDB Database Please
-proceed to the next section
+.. hint::
+
+   It will take around 10 minutes to deploy the MariaDB Database Please
+   proceed to the next section
 
 Kubernetes Setup
 ----------------
 
--  Go to Prism Central, click on the Burger, Services, Karbon
+-  Go to Prism Central, click on the Burger \ |image4|, Services, 
+   Karbon
 
 -  Cluster Clusters / Check your cluster name / Actions / Download
-      Kubeconfig. Click on the Download link
+   Kubeconfig. Click on the Download link
 
-   -  Save it to ~/Downloads folder leave file name unchanged)
+-  Save it to ~/Downloads folder leave file name unchanged)
 
 -  Open the file with Notepad, and copy the content of this file
 
 -  Connect to the linux jumphost (with putty as username: yourusername
-      (example userxx) pw: nutanix/4u)
+   (example userxx) pw: nutanix/4u)
 
-   -  To avoid to write every time the **kubectl**, will create an alias
-         -> alias k=kubectl
+To avoid to write every time the **kubectl**, will create an alias
 
-+-----------------+
-| alias k=kubectl |
-+-----------------+
+.. code-block:: Bash
+    
 
--  Create a folder to host the kubectl config file ->
+    alias k=kubectl
 
-+---------------+
-| mkdir ~/.kube |
-+---------------+
+
+-  Create a folder to host the kubectl config file
+
+.. code-block:: Bash
+    
+    
+    mkdir ~/.kube
 
 Option 1:
 
--  Use **vi** or **nano** to configure the kubectl config file on the
-      linux jumphost
+Use **vi** or **nano** to configure the kubectl config file on the
+linux jumphost
 
-+---------------------+
-| nano ~/.kube/config |
-+---------------------+
+.. code-block:: Bash
+    
+    
+    nano ~/.kube/config
 
-+-------------------+
-| vi ~/.kube/config |
-+-------------------+
+or
+
+.. code-block:: Bash
+    
+    
+    vi ~/.kube/config
 
 -  Open the Downloaded kubeconfig file
-      (~/Downloads/karbon-<TLA>-01-kubectl.cfg in notepad
-
--  copy and paste the text) in the following file ->
+   (~/Downloads/karbon-<TLA>-01-kubectl.cfg in notepad
+   copy and paste the text) in the following file
 
 (to save the content of the file once your editing with vi, press
 esc,:w,:q)
@@ -783,98 +782,103 @@ esc,:w,:q)
 Option2:
 
 -  Open PowerShell on Frame Session and execute (Windows ->type power ->
-      choose and start Windows Powershell, then
+   choose and start Windows Powershell, then
 
-+----------------+
-| cd ~/Downloads |
-| dir \*.cfg     |
-+----------------+
+.. code-block:: Bash
+    
+    
+    cd ~/Downloads
+    dir \*.cfg
 
 -  Identify the filename (e.g karbon-<TLA>-01-kubectl.cfg)
 
--  Transfer the file using scp
+-  Transfer the file using scp Example scp
 
-..
-
-   Example scp
-
-+----------------------------------------------------------------------+
-| **scp ~/Downloads/karbon-TS-01-kubectl.cfg                           |
-| youruser\ @\ jumphostip:~/.kube/config**                             |
-+----------------------------------------------------------------------+
+.. code-block:: Bash
+    
+    **scp ~/Downloads/karbon-TS-01-kubectl.cfg
+    youruser\ @\ jumphostip:~/.kube/config**
 
 -  Test the kubetcl configuration, an output should be shown ->
 
-+-----------------------------------------------------------------------+
-| **k get pods -A** #or kubectl get pod -A if you have no alias created |
-+-----------------------------------------------------------------------+
+.. code-block:: Bash
+    
+    k get pods -A
+    
+-  Create a folder named metallb
 
--  Create a folder named metallb ->
+.. code-block:: Bash
+    
+    mkdir metallb; cd metallb
 
-+-------------------------------+
-| **mkdir metallb; cd metallb** |
-+-------------------------------+
+-  Install the metallb service with the following commands
 
--  Install the metallb service with the following commands :
+.. code-block:: Bash
+    
+    kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.9.5/manifests/namespace.yaml
+    kubectl apply -f https://karbon-bootcamp.s3.eu-west-3.amazonaws.com/metallb.yaml
 
-+----------------------------------------------------------------------+
-| kubectl apply -f                                                     |
-| https://raw.g                                                        |
-| ithubusercontent.com/metallb/metallb/v0.9.5/manifests/namespace.yaml |
-|                                                                      |
-| kubectl apply -f                                                     |
-| https://karbon-bootcamp.s3.eu-west-3.amazonaws.com/metallb.yaml      |
-+----------------------------------------------------------------------+
-
-+----------------------------------------------------------------------+
-| kubectl create secret generic -n metallb-system memberlist           |
-| --from-literal=secretkey="$(openssl rand -base64 128)"               |
-+----------------------------------------------------------------------+
-
-https://karbon-bootcamp.s3.eu-west-3.amazonaws.com/metallb-install.txt
+.. code-block:: Bash
+    
+    kubectl create secret generic -n metallb-system memberlist --from-literal=secretkey="$(openssl rand -base64 128)" https://karbon-bootcamp.s3.eu-west-3.amazonaws.com/metallb-install.txt
 
 -  Create a file named metallb-config.yaml with the following content,
-      be careful to adapt the last line with the information as provided
-      in ressources lab document, for the field **Karbon MetalLB Pool**
-      :
+   be careful to adapt the last line with the information as provided
+   in ressources lab document, for the field **Karbon MetalLB Pool**
+   :
 
-+---------------------------+
-| apiVersion: v1            |
-| kind: ConfigMap           |
-| metadata:                 |
-| namespace: metallb-system |
-| name: config              |
-| data:                     |
-| config: \|                |
-| address-pools:            |
-| - name: default           |
-| protocol: layer2          |
-| addresses:                |
-| - x.x.x.x-y.y.y.y         |
-+---------------------------+
-
+.. code-block:: Bash
+    
+    
+    apiVersion: v1
+    kind: ConfigMap
+    metadata:
+    namespace: metallb-system
+    name: config
+    data:
+    config: \|
+    address-pools:
+    name: default
+    protocol: layer2
+    addresses:
+    - x.x.x.x-y.y.y.y
+  
 https://karbon-bootcamp.s3.eu-west-3.amazonaws.com/metallb-config.txt
 
--  Configure the metallb setup ->
+-  Configure the metallb setup
+  
+.. code-block:: Bash
+    
+    
+    k apply -f metallb-config.yaml
 
--  k apply -f metallb-config.yaml
+-  Test the current setup, by deploying a basic nginx container
 
--  Test the current setup, by deploying a basic nginx container ->
+.. code-block:: Bash
+    
 
--  k create deployment nginx
-      --image=registry.gitlab.com/fabrice.krebs/nutanix-ch/nginx
+    k create deployment nginx --image=registry.gitlab.com/fabrice.krebs/nutanix-ch/nginx
 
--  Check if the deployed worked ->
+-  Check if the deployed worked
 
--  k get pods
+.. code-block:: Bash
+    
 
--  Expose the deployment behind the metallb load balancer ->
+    k get pods
 
--  k expose deployment nginx --name nginx --type LoadBalancer --port 80
+-  Expose the deployment behind the metallb load balancer
 
--  Get and copy the external IP of the nginx service ->
+.. code-block:: Bash
+    
 
--  k get svc
+    k expose deployment nginx --name nginx --type LoadBalancer --port 80
+
+-  Get and copy the external IP of the nginx service
+
+.. code-block:: Bash
+    
+
+    k get svc
 
 -  Open a second browser tab and past the IP address. The nginx webpage
       should appear. If the test is successful, continue. Otherwise,
@@ -894,27 +898,34 @@ Browser Tab:
 -  Click on your database server name
 
 -  Under section Database Server VM on the middle of the page, copy the
-      IP Address or write it somewhere. We will need it later
+   IP Address or write it somewhere. We will need it later
 
 NextCloud deployment
 --------------------
 
--  Create a new nextcloud deployment ->
+-  Create a new nextcloud deployment
 
--  *k create deployment nextcloud
-      --image=registry.gitlab.com/fabrice.krebs/nutanix-ch/nextcloud*
+.. code-block:: Bash
+    
+    
+    k create deployment nextcloud --image=registry.gitlab.com/fabrice.krebs/nutanix-ch/nextcloud*
 
--  Expose the new deployment to the public network ->
+-  Expose the new deployment to the public network
 
--  k expose deployment nextcloud --type=LoadBalancer --name=nextcloud
-      --port=80 --target-port=80
+.. code-block:: Bash
+    
+    
+    k expose deployment nextcloud --type=LoadBalancer --name=nextcloud --port=80 --target-port=80
 
--  Retrieve the External-IP address of the deployment ->
+-  Retrieve the External-IP address of the deployment
 
--  k get services
+.. code-block:: Bash
+    
+    
+    k get services
 
 -  Open a new tab and type the external-ip address. You should have the
-      nextcloud home page available.
+   nextcloud home page available.
 
 -  Do the setup with the following information :
 
@@ -924,7 +935,7 @@ NextCloud deployment
 
 -  **Do not click on Finish yet**
 
-..
+.. hint::
 
    If you pushed too fast k delete deployment nextcloud #;-)
 
@@ -937,13 +948,13 @@ NextCloud deployment
    -  Database name : nextcloud
 
    -  Replace localhost with the Database IP Address retrieved
-         previously
+      previously
 
    -  **Unckeck install recommended apps,** as it will take some time
-         for applications to be deployed
+      for applications to be deployed
 
 -  Click Finish. The initial setup will proceed in a couple of minutes.
-      You’ll then be able to access the freshly deployed nextcloud.
+   You’ll then be able to access the freshly deployed nextcloud.
 
 -  **Do not close the browser TAB**
 
@@ -960,19 +971,19 @@ Return to the prism central interface
 -  Click on the Burger / Service / Object
 
 -  Generate an access key by clicking on Access Keys on the top / Add
-      People / Add people not in a directory service
+   People / Add people not in a directory service
 
    -  Email address : your-initial@demo.com
 
    -  Name : Your name
 
 -  Click Next / Generate Keys / Download Keys (very important as you can
-      get it only once)
+   get it only once)
 
 -  Click on Object Stores on the Top / Click on your cluster
 
 -  Write down somewhere the Object Public IPs assigned from the Existing
-      Object Store, we will need it for the nextcloud configuration.
+   Object Store, we will need it for the nextcloud configuration.
 
 -  Click on Create Bucket
 
@@ -998,12 +1009,12 @@ Go back to NextCloud Tab:
 -  Click on the A on the top right section / Apps
 
 -  Go at the bottom of the windows to find External storage support,
-      click on Enable
+   click on Enable
 
 -  Click on the A on the top right section / Settings
 
 -  On the left side, click on External Storages under the
-      **Administration Section** (and not the first Personal section)
+   **Administration Section** (and not the first Personal section)
 
    -  Folder Name : external_storage
 
@@ -1024,34 +1035,34 @@ Go back to NextCloud Tab:
    -  Select admin user
 
    -  Access Key : The access key located on the file you’ve downloaded
-         when configuring object
+      when configuring object
 
    -  Secret Key : The secret key located on the file you’ve downloaded
-         when configuring object
+      when configuring object
 
    -  Click on the |image7| icône to verify and validate
 
 -  Now the Object storage is connected, let’s try to upload some files.
-      Click on the folder icône on the top left section
+   Click on the folder icône on the top left section
 
 -  Click on external storage folder
 
 -  Click on the |image8|\ icone on the top section, and upload a couple
-      of files from the local computer. Wait for the upload to be done.
-      You should see the uploaded file, which aren’t located on the
-      Nextcloud itself, but store on the external object store
+   of files from the local computer. Wait for the upload to be done.
+   You should see the uploaded file, which aren’t located on the
+   Nextcloud itself, but store on the external object store
 
 Check the Embedded Nutanix Object Browser
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 -  With a Web Browser, connect to the Object Public IP Address of the
-      Object Store, used when creating your bucket
-      (http://x.x.x.x/objectsbrowser/)
+   Object Store, used when creating your bucket
+   (http://x.x.x.x/objectsbrowser/)
 
 -  Enter the Access Key and the Secret Key you’d previously downloaded
 
 -  Check if your uploaded files appear in the bucket to verify your
-      configuration/setup
+   configuration/setup
 
 Additional Lab
 --------------
@@ -1065,10 +1076,10 @@ Check Karbon scale-out
 -  On Prism Central / Burger / Service / Karbon
 
 -  Click on your cluster / Nodes on the left side / + Add Worker and add
-      1 additional node (please don’t do more than one to keep resources
-      for everyone) / Create. The system will deploy and add additional
-      worker nodes. You can go back in a couple of minutes to see the
-      additional worker added (around 5 minutes).
+   1 additional node (please don’t do more than one to keep resources
+   for everyone) / Create. The system will deploy and add additional
+   worker nodes. You can go back in a couple of minutes to see the
+   additional worker added (around 5 minutes).
 
 Check Karbon ElasticSearch / Kibana logging stack
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1078,11 +1089,11 @@ Check Karbon ElasticSearch / Kibana logging stack
 -  Click on your cluster / Add-on / Logging
 
 -  Go to Discover in Kibana. Under Create Index Pattern, type \* and
-      click Next Step / Select @timestamp time Filter / Create Index
-      Pattern
+   click Next Step / Select @timestamp time Filter / Create Index
+   Pattern
 
 -  Go again to Discover, and select the index \* on the top. You’ll see
-      all logs of the K8S deployment.
+   all logs of the K8S deployment.
 
 Check object metrics 
 ~~~~~~~~~~~~~~~~~~~~
@@ -1090,11 +1101,11 @@ Check object metrics
 -  On Prism Central / Burger / Service / Object
 
 -  Click on your cluster / performance on the left side. You’ll see the
-      full performance overview (change to Last 1 hour to have a better
-      view)
+   full performance overview (change to Last 1 hour to have a better
+   view)
 
 -  Click Buckets on the left side / nextcloud / performance. You’ll see
-      the performance of the specific bucket
+   the performance of the specific bucket
 
 Clone the MariaDB Database
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1106,7 +1117,7 @@ Clone the MariaDB Database
 -  Click Create Clone of MariaDB Instance from Time Machine
 
 -  Select a specific Point in Time. It will deploy a clone with the
-      content of the database at a specific time / next
+   content of the database at a specific time / next
 
 -  Create a New Server
 
@@ -1117,7 +1128,7 @@ Clone the MariaDB Database
    -  Network Profile : MariaNW
 
    -  SSH KEY : Select Text, and copy paste the following string (it’s a
-         one line text!)
+      one line text!)
 
 +----------------------------------------------------------------------+
 | ssh-rsa                                                              |
@@ -1138,9 +1149,9 @@ Clone the MariaDB Database
    -  New ROOT password : nx2Tech123!
 
 -  Check schedule data Refresh. When selecting this option, the system
-      will periodically retrieve the data from the source database, and
-      publish it to the clone you are deploying. Very useful for DEV and
-      Test platform.
+   will periodically retrieve the data from the source database, and
+   publish it to the clone you are deploying. Very useful for DEV and
+   Test platform.
 
 Manage your Kubernetes Cluster with LENS IDE
 --------------------------------------------
@@ -1156,7 +1167,7 @@ To graphically manage the K8S cluster, the LENS IDE can be used.
 -  Click File / Add Cluster
 
 -  Select the previously downloaded kube configuration file and keep the
-      default value / Add cluster(s)
+   default value / Add cluster(s)
 
 -  You’ll now see all K8S ressources graphically.
 
