@@ -719,8 +719,9 @@ or
    (~/Downloads/karbon-<TLA>-01-kubectl.cfg in notepad
    copy and paste the text) in the following file
 
-(to save the content of the file once your editing with vi, press
-esc,:w,:q)
+.. hint::
+
+to save the content of the file once your editing with vi, press esc,:w,:q
 
 Option2:
 
