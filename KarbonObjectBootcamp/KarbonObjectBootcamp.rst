@@ -6,58 +6,6 @@
 Advanced Boocamp (Automation) (Instructor only)
 ===============================================
 
-Table of Content
-----------------
-
-   `POC preparation guide and notes <#poc-preparation-guide-and-notes>`__
-
-   `HPOC Reservation instructions (several days
-   before) <#hpoc-reservation-instructions-several-days-before>`__
-
-   `Bootcamp Preparation (the day
-   before) <#bootcamp-preparation-the-day-before>`__
-
-   `Topic <#topic>`__
-
-   `Goal <#goal>`__
-
-   `Design <#design>`__
-
-   `Deployment <#deployment>`__
-
-   `Objects <#objects>`__
-
-   `Karbon/Kubernetes Cluster <#karbonkubernetes-cluster>`__
-
-   `Era <#era>`__
-
-   `Kubernetes Setup <#kubernetes-setup>`__
-
-   `MariaDB: <#mariadb>`__
-
-   `NextCloud deployment <#nextcloud-deployment>`__
-
-   `Nutanix Object creation <#nutanix-object-creation>`__
-
-   `Add Object Storage to
-   NextCloud <#add-object-storage-to-nextcloud>`__
-
-   `Additional Lab <#additional-lab>`__
-
-   `Check Karbon scale-out <#check-karbon-scale-out>`__
-
-   `Check Karbon ElasticSearch / Kibana logging
-   stack <#check-karbon-elasticsearch-kibana-logging-stack>`__
-
-   `Check object metrics <#check-object-metrics>`__
-
-   `Check the Embedded Nutanix Object Browser <#_35jfskbl2s6u>`__
-
-   `Clone the MariaDB Database <#clone-the-mariadb-database>`__
-
-   `Manage your Kubernetes Cluster with LENS
-   IDE <#manage-your-kubernetes-cluster-with-lens-ide>`__
-
 POC preparation guide and notes
 -------------------------------
 
