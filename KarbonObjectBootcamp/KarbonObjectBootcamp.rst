@@ -740,8 +740,8 @@ Option2:
 
 .. code-block:: Bash
     
-    **scp ~/Downloads/karbon-TS-01-kubectl.cfg
-    youruser\ @\ jumphostip:~/.kube/config**
+    scp ~/Downloads/karbon-TS-01-kubectl.cfg
+    youruser\ @\ jumphostip:~/.kube/config
 
 -  Test the kubetcl configuration, an output should be shown ->
 
