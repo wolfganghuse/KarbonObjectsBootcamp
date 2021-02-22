@@ -18,7 +18,10 @@ When reserving the HPOC:
 - Put the same password for all reservations (suggested nx2Tech123!)
 
 - Reserve a master cluster, which will be deployed by
-`1-click-demo <mailto:1-click-demo@nutanix.com>`__, the day before. The other clusters without
+
+`1-click-demo <mailto:1-click-demo@nutanix.com>`__, the day before. 
+
+The other clusters without
 `1-click-demo <mailto:1-click-demo@nutanix.com>`__
 
 A bit like real world scenario :
