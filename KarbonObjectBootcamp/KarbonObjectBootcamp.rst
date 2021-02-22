@@ -25,10 +25,7 @@ other clusters without
 A bit like real world scenario :
 
 -  Master Cluster = Management cluster
-
-   ..
-
-      User Cluster = Production cluster for specific workload
+-  User Cluster = Production cluster for specific workload
 
 Bootcamp Preparation (the day before)
 -------------------------------------
@@ -362,7 +359,7 @@ Back on Prism Central
 +----------------------------------------------------------------------+
 
 -  Once deployed, start it, and install the kubectl with this command
-      (use putty, not console):
+   (use putty, not console):
 
 +----------------------------------------------------------------------+
 | sudo -s                                                              |
@@ -709,15 +706,13 @@ Use **vi** or **nano** to configure the kubectl config file on the
 linux jumphost
 
 .. code-block:: Bash
-    
-    
+        
     nano ~/.kube/config
 
 or
 
 .. code-block:: Bash
-    
-    
+        
     vi ~/.kube/config
 
 -  Open the Downloaded kubeconfig file
@@ -776,8 +771,7 @@ Option2:
    :
 
 .. code-block:: Bash
-    
-    
+        
     apiVersion: v1
     kind: ConfigMap
     metadata:
