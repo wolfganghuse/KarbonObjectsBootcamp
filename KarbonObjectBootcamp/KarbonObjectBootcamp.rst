@@ -623,6 +623,14 @@ To graphically manage the K8S cluster, the LENS IDE can be used.
 
 -  You’ll now see all K8S ressources graphically.
 
+For Instructors
+===============
+
+Link to Lab
+-----------
+
+https://docs.google.com/document/d/1Olu6xKqkbwPKplyKfI6ijDtlHb9XIZIIr15kXNCBLLU/edit#heading=h.yptqwv4kn3ni
+
 .. |image0| image:: media/image3.png
    :width: 6.5in
    :height: 3.34722in
