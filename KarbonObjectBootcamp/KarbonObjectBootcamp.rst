@@ -75,8 +75,13 @@ Objects
 -  Select **your corresponding** Nutanix Cluster
 -  Select Managed-Network for both Object Infra Network and Objects
    Public Network. Enter the Objects Infra IPs and Object Public IPs
-   with the information provided in Ressources lab document. **Do not
-   deploy it**
+   with the information provided in Ressources lab document. 
+   
+.. role:: red
+
+**Do not click on create, and click cancel, as an object store has 
+already been created for you.**
+
 
 Karbon/Kubernetes Cluster
 -------------------------
