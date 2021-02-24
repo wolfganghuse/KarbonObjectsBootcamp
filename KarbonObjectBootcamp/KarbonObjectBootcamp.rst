@@ -210,7 +210,7 @@ To avoid to write every time the **kubectl**, will create an alias
     alias k=kubectl
 
 
--  Create a folder to host the kubectl config file
+Create a folder to host the kubectl config file
 
 .. code-block:: Bash
     
@@ -223,9 +223,9 @@ linux jumphost
         
     vi ~/.kube/config
 
--  Open the Downloaded kubeconfig file
-   (~/Downloads/karbon-<TLA>-01-kubectl.cfg in notepad
-   copy and paste the text) in the following file
+Open the Downloaded kubeconfig file
+(~/Downloads/karbon-<TLA>-01-kubectl.cfg in notepad
+copy and paste the text) in the following file
 
 .. hint::
 
@@ -237,13 +237,13 @@ Test the kubetcl configuration, an output should be shown
     
     k get pods -A
     
--  Create a folder named metallb
+Create a folder named metallb
 
 .. code-block:: Bash
     
     mkdir metallb; cd metallb
 
--  Install the metallb service with the following commands
+Install the metallb service with the following commands
 
 .. code-block:: Bash
     
@@ -279,37 +279,36 @@ https://karbon-bootcamp.s3.eu-west-3.amazonaws.com/metallb-config.txt
     
     k apply -f metallb-config.yaml
 
--  Test the current setup, by deploying a basic nginx container
+Test the current setup, by deploying a basic nginx container
 
 .. code-block:: Bash
     
 
     k create deployment nginx --image=registry.gitlab.com/fabrice.krebs/nutanix-ch/nginx
 
--  Check if the deployed worked
+Check if the deployed worked
 
 .. code-block:: Bash
     
 
     k get pods
 
--  Expose the deployment behind the metallb load balancer
+Expose the deployment behind the metallb load balancer
 
 .. code-block:: Bash
     
 
     k expose deployment nginx --name nginx --type LoadBalancer --port 80
 
--  Get and copy the external IP of the nginx service
+Get and copy the external IP of the nginx service
 
 .. code-block:: Bash
-    
-
+   
     k get svc
 
--  Open a second browser tab and past the IP address. The nginx webpage
-      should appear. If the test is successful, continue. Otherwise,
-      contact the instructor
+Open a second browser tab and past the IP address. The nginx webpage
+should appear. If the test is successful, continue. Otherwise,
+contact the instructor
 
 MariaDB:
 --------
