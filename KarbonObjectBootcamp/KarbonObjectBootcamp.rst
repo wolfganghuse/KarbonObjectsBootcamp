@@ -331,22 +331,22 @@ NextCloud deployment
     
     k create deployment nextcloud --image=registry.gitlab.com/fabrice.krebs/nutanix-ch/nextcloud*
 
--  Expose the new deployment to the public network
+Expose the new deployment to the public network
 
 .. code-block:: Bash
     
     
     k expose deployment nextcloud --type=LoadBalancer --name=nextcloud --port=80 --target-port=80
 
--  Retrieve the External-IP address of the deployment
+Retrieve the External-IP address of the deployment
 
 .. code-block:: Bash
     
     
     k get services
 
--  Open a new tab and type the external-ip address. You should have the
-   nextcloud home page available.
+Open a new tab and type the external-ip address. You should have the
+nextcloud home page available.
 
 -  Do the setup with the following information :
 
@@ -374,8 +374,8 @@ NextCloud deployment
    -  **Unckeck install recommended apps,** as it will take some time
       for applications to be deployed
 
--  Click Finish. The initial setup will proceed in a couple of minutes.
-   You’ll then be able to access the freshly deployed nextcloud.
+Click Finish. The initial setup will proceed in a couple of minutes.
+You’ll then be able to access the freshly deployed nextcloud.
 
 -  **Do not close the browser TAB**
 
