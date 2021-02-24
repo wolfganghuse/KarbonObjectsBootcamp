@@ -285,15 +285,15 @@ Option2:
     apiVersion: v1
     kind: ConfigMap
     metadata:
-    namespace: metallb-system
-    name: config
+       namespace: metallb-system
+       name: config
     data:
-    config: \|
-    address-pools:
-    name: default
-    protocol: layer2
-    addresses:
-    - x.x.x.x-y.y.y.y
+       config: \|
+          address-pools:
+             name: default
+             protocol: layer2
+             addresses:
+             - x.x.x.x-y.y.y.y
   
 https://karbon-bootcamp.s3.eu-west-3.amazonaws.com/metallb-config.txt
 
