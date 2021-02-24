@@ -358,7 +358,7 @@ nextcloud home page available.
 
 .. hint::
 
-   If you pushed too fast k delete deployment nextcloud #;-)
+   If you pushed too fast k delete deployment nextcloud ;-)
 
 -  Click on Storage & database / MySQL MariaDB |image6|
 
