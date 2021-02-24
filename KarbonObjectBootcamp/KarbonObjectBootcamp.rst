@@ -252,7 +252,7 @@ Option2:
     scp ~/Downloads/karbon-TS-01-kubectl.cfg
     youruser\ @\ jumphostip:~/.kube/config
 
-Test the kubetcl configuration, an output should be shown ->
+Test the kubetcl configuration, an output should be shown
 
 .. code-block:: Bash
     
@@ -269,31 +269,27 @@ Test the kubetcl configuration, an output should be shown ->
 .. code-block:: Bash
     
     kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.9.5/manifests/namespace.yaml
-    kubectl apply -f https://karbon-bootcamp.s3.eu-west-3.amazonaws.com/metallb.yaml
+    kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.9.5/manifests/metallb.yaml
+    kubectl create secret generic -n metallb-system memberlist --from-literal=secretkey="$(openssl rand -base64 128)"
 
-.. code-block:: Bash
-    
-    kubectl create secret generic -n metallb-system memberlist --from-literal=secretkey="$(openssl rand -base64 128)" https://karbon-bootcamp.s3.eu-west-3.amazonaws.com/metallb-install.txt
-
--  Create a file named metallb-config.yaml with the following content,
-   be careful to adapt the last line with the information as provided
-   in ressources lab document, for the field **Karbon MetalLB Pool**
-   :
+Create a file named metallb-config.yaml with the following content,
+be careful to adapt the last line with the information as provided
+in ressources lab document, for the field **Karbon MetalLB Pool**
 
 .. code-block:: Bash
         
     apiVersion: v1
     kind: ConfigMap
     metadata:
-       namespace: metallb-system
-       name: config
+      namespace: metallb-system
+      name: config
     data:
-       config: |
-          address-pools:
-             name: default
-             protocol: layer2
-             addresses:
-             - x.x.x.x-y.y.y.y
+      config: |
+        address-pools:
+        - name: default
+          protocol: layer2
+          addresses:
+          - x.x.x.x-y.y.y.y
   
 https://karbon-bootcamp.s3.eu-west-3.amazonaws.com/metallb-config.txt
 
