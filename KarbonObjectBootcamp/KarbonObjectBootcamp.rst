@@ -82,6 +82,10 @@ Objects
 **Do not click on create, and click cancel, as an object store has 
 already been created for you.**
 
+.. hint::
+
+    The creation of an object store is time-consuming and not feasible 
+    in this time with parallel staging
 
 Karbon/Kubernetes Cluster
 -------------------------
