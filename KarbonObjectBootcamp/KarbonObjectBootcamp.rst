@@ -420,7 +420,7 @@ Return to the prism central interface
 
 -  Search for people your-initial@demo.com
 
--  Check permission Read, and Write / Save
+-  Check permission Read and Write / Save
 
 Add Object Storage to NextCloud 
 -------------------------------
