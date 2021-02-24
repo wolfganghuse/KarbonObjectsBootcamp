@@ -216,8 +216,6 @@ To avoid to write every time the **kubectl**, will create an alias
     
     mkdir ~/.kube
 
-Option 1:
-
 Use **vi** to configure the kubectl config file on the
 linux jumphost
 
