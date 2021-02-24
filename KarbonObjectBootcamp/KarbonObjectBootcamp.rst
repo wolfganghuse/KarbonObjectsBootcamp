@@ -246,7 +246,7 @@ Install the metallb service with the following commands
 .. code-block:: Bash
     
     kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.9.5/manifests/namespace.yaml
-    kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.9.5/manifests/metallb.yaml
+    kubectl apply -f https://karbon-bootcamp.s3.eu-west-3.amazonaws.com/metallb.yaml
     kubectl create secret generic -n metallb-system memberlist --from-literal=secretkey="$(openssl rand -base64 128)"
 
 Create a file named metallb-config.yaml with the following content,
