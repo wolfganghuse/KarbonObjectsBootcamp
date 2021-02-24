@@ -288,7 +288,7 @@ Option2:
        namespace: metallb-system
        name: config
     data:
-       config: \|
+       config: |
           address-pools:
              name: default
              protocol: layer2
