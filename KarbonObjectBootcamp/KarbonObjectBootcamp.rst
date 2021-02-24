@@ -207,7 +207,6 @@ To avoid to write every time the **kubectl**, will create an alias
 
 .. code-block:: Bash
     
-
     alias k=kubectl
 
 
@@ -215,19 +214,12 @@ To avoid to write every time the **kubectl**, will create an alias
 
 .. code-block:: Bash
     
-    
     mkdir ~/.kube
 
 Option 1:
 
-Use **vi** or **nano** to configure the kubectl config file on the
+Use **vi** to configure the kubectl config file on the
 linux jumphost
-
-.. code-block:: Bash
-        
-    nano ~/.kube/config
-
-or
 
 .. code-block:: Bash
         
