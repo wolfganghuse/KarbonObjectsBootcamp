@@ -229,8 +229,6 @@ copy and paste the text) in the following file
 
 .. hint::
 
-to save the content of the file once your editing with vi, press esc,:w,:q
-
 Test the kubetcl configuration, an output should be shown
 
 .. code-block:: Bash
@@ -283,21 +281,18 @@ Test the current setup, by deploying a basic nginx container
 
 .. code-block:: Bash
     
-
     k create deployment nginx --image=registry.gitlab.com/fabrice.krebs/nutanix-ch/nginx
 
 Check if the deployed worked
 
 .. code-block:: Bash
     
-
     k get pods
 
 Expose the deployment behind the metallb load balancer
 
 .. code-block:: Bash
     
-
     k expose deployment nginx --name nginx --type LoadBalancer --port 80
 
 Get and copy the external IP of the nginx service
