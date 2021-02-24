@@ -329,7 +329,7 @@ NextCloud deployment
 .. code-block:: Bash
     
     
-    k create deployment nextcloud --image=registry.gitlab.com/fabrice.krebs/nutanix-ch/nextcloud*
+    k create deployment nextcloud --image=registry.gitlab.com/fabrice.krebs/nutanix-ch/nextcloud
 
 Expose the new deployment to the public network
 
