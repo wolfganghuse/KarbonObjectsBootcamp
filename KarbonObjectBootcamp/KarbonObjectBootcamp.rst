@@ -233,26 +233,6 @@ linux jumphost
 
 to save the content of the file once your editing with vi, press esc,:w,:q
 
-Option2:
-
--  Open PowerShell on Frame Session and execute (Windows ->type power ->
-   choose and start Windows Powershell, then
-
-.. code-block:: Bash
-    
-    
-    cd ~/Downloads
-    dir \*.cfg
-
--  Identify the filename (e.g karbon-<TLA>-01-kubectl.cfg)
-
--  Transfer the file using scp Example scp
-
-.. code-block:: Bash
-    
-    scp ~/Downloads/karbon-TS-01-kubectl.cfg
-    youruser\ @\ jumphostip:~/.kube/config
-
 Test the kubetcl configuration, an output should be shown
 
 .. code-block:: Bash
