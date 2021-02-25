@@ -159,6 +159,7 @@ Era
     
     ssh-rsa AAAAB3NzaC1yc2EAAAABJQAAAQEAiC8r6cLFLn/c/iR8TKXQhN20wUQwua8DSZM7rpGwuxbgLSSznW/hEVIogx3UoRamU3lIDsD8QKLBiHg29xc/PvR/Ro5Fxvhih3XOQTC14cEwPvgXgMHgPBJ5Vw+bW3a8HVM3S4dsaCsYAkDeHJmXP4G7HN4vrqc3fjb1UYV3iUe8AcheKzD7sG8MSjFBPc7WVI0I47Ly/eKVxVp0csE0fUH6IogUMqA1zp/C/uziAG1vZO6Td2S/FW70OKnCnnNRN8+e7BNlrIuy/0fLsKjUeNEgr8iuFFDoPA23vaPzcZR3hbsICOw7yoFbAsL+z+Mc6O74Nj7bT6WX3rVgMCFFYQ==
 
+https://karbon-bootcamp.s3.eu-west-3.amazonaws.com/ssh-public-key.txt
 
 https://karbon-bootcamp.s3.eu-west-3.amazonaws.com/ssh-public-key.txt
 
@@ -443,7 +444,7 @@ Go back to NextCloud Tab:
 
    -  Authentication : Access Key
 
-   -  Bucket : nextcloud
+   -  Bucket : nextcloud-yourinitals
 
    -  Hostname : The Object Public IPs you’ve copied previously
 
@@ -461,10 +462,10 @@ Go back to NextCloud Tab:
    -  Secret Key : The secret key located on the file you’ve downloaded
       when configuring object
 
-   -  Click on the |image7| icône to verify and validate
+   -  Click on the |image7| icone to verify and validate
 
 -  Now the Object storage is connected, let’s try to upload some files.
-   Click on the folder icône on the top left section
+   Click on the folder icone on the top left section
 
 -  Click on external storage folder
 
