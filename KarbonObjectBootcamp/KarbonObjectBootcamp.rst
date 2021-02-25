@@ -62,6 +62,9 @@ indicated how to get it on the documentation when needed.
 Objects
 -------
 
+**This is a showcase, do not click on create, and click cancel afterwards, as an object store has 
+already been created for you.**
+
 -  With Google Chrome, **connect** to the **Prism Central** (as provided
    in Ressources lab document), click on the\ |image4| Burger Menu,click 
    **Services**, click **Objects**
@@ -76,11 +79,6 @@ Objects
 -  Select Managed-Network for both Object Infra Network and Objects
    Public Network. Enter the Objects Infra IPs and Object Public IPs
    with the information provided in Ressources lab document. 
-   
-.. role:: red
-
-**Do not click on create, and click cancel, as an object store has 
-already been created for you.**
 
 .. hint::
 
