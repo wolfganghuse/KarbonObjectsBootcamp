@@ -302,7 +302,12 @@ Get and copy the external IP of the nginx service
 
 Open a second browser tab and past the IP address. The nginx webpage
 should appear. If the test is successful, continue. Otherwise,
-contact the instructor
+
+.. hint::
+
+If your EXTERNAL-IP is listed as Pending, this indicates an issue with your MetalLB ConfigMap file.
+Run kubectl describe configmap config -n metallb-system to verify your IP addresses are correct
+Fix your metallb-config.yaml file and run kubectl apply -f metallb-config.yaml again
 
 MariaDB:
 --------
