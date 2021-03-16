@@ -407,7 +407,7 @@ Return to the prism central interface
 
 -  Click on Object Stores on the Top / Click on your cluster
 
--  Write down somewhere the Object Public IP assigned from the Existing
+-  Write down somewhere one Object Public IP assigned from the Existing
    Object Store, we will need it for the nextcloud configuration.
 
 -  Click on Create Bucket
