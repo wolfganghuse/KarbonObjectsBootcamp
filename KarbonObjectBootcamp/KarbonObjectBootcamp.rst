@@ -93,13 +93,13 @@ Karbon/Kubernetes Cluster
 -  Click **create a Kubernetes Cluster**
 -  Select **Production Cluster** / Next 
 
--  **Node-Configuration**
+-  **Name and Environment**
   
    -  Enter a name, as provided in Ressources lab document, and select
       **your corresponding** Nutanix Cluster / Next 
       **(leave k8s and Host OS out for now)**
 
--  **Network**
+-  **Node Configuration**
 
    -  Select the network named Managed-Network
 
@@ -112,6 +112,10 @@ Karbon/Kubernetes Cluster
       steps).
 
    -  Keep the CIDR range by default / Next
+
+-  **Network**
+
+   -  /Next
 
 -  **Storage-Class**
 
