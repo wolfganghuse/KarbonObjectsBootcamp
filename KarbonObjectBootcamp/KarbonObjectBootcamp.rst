@@ -745,7 +745,7 @@ good overview of the Nutanix solution.
 Check Karbon scale-out
 ~~~~~~~~~~~~~~~~~~~~~~
 
--  On Prism Central \ |image4| **/ Service / Karbon**
+-  On Prism Central \ |image4| **> Service > Karbon**
 
 -  Click on your cluster / Nodes on the left side / + Add Worker and add
    1 additional node (please don’t do more than one to keep resources
@@ -756,7 +756,7 @@ Check Karbon scale-out
 Check Karbon ElasticSearch / Kibana logging stack
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
--  On Prism Central \ |image4| **/ Service / Karbon**
+-  On Prism Central \ |image4| **> Service > Karbon**
 
 -  Click on your cluster / Add-on / Logging
 
@@ -770,7 +770,7 @@ Check Karbon ElasticSearch / Kibana logging stack
 Check object metrics 
 ~~~~~~~~~~~~~~~~~~~~
 
--  On Prism Central / Burger / Service / Object
+-  On Prism Central |image4| **> Service / Object**
 
 -  Click on your cluster / performance on the left side. You’ll see the
    full performance overview (change to Last 1 hour to have a better
