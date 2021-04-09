@@ -645,65 +645,33 @@ Up to this point, we have used manually created manifest files to deploy our app
 
 #. Monitor the deployment in **Lens > Workloads > Pods**.
 
-   .. figure:: media/89.png
-
    Select the **kasten-io** namespace and wait until all Pods are in a **Running** state, this should take < 5 minutes.
 
    .. note::
 
       You may need to close/re-open **Lens** in order to see the new **kasten-io** namespace.
 
-   Similar to our other deployments, we will use Traefik to enable external access to the **K10** frontend. However, we can first quickly verify the app is up and running ``kubectl`` as a temporary proxy.
+   if you don´t installed **Lens** you could also use:
+   .. code-block:: bash
 
-#. In **Powershell**, run ``kubectl --namespace kasten-io port-forward service/gateway 8080:8000``
+      kubectl get pods -n kasten-io
 
-#. Open http://127.0.0.1:8080/k10/#/ in your **USER**\ *##*\ **-WinToolsVM** browser.
+   Similar to our other deployments, we will expose the Port to enable external access to the **K10** frontend. 
 
-   .. figure:: media/91.png
+   .. code-block:: Bash
+    
+      k expose deployment nextcloud --type=LoadBalancer --name=nextcloud --port=80 --target-port=80
+
+   Retrieve the External-IP address of the deployment
+
+   .. code-block:: Bash 
+    
+      k get services
+
+   Open a new tab and type the external-ip address.
 
    If your deployment was successful, you will be prompted with the EULA.
 
-#. Press **Ctrl+C** in **PowerShell** to stop the proxy.
-
-Adding K10 Traefik Route
-........................
-
-#. In **Visual Studio Code**, open your existing **traefik-routes.yaml** file.
-
-#. Paste the following to the end of your file:
-
-   .. code-block:: yaml
-
-      ---
-      apiVersion: traefik.containo.us/v1alpha1
-      kind: IngressRoute
-      metadata:
-        name: simpleingressroute
-        namespace: kasten-io
-      spec:
-        entryPoints:
-          - web
-        routes:
-        - match: Host(`k10.lab.local`)
-          kind: Rule
-          services:
-          - name: gateway
-            port: 8000
-
-#. Save the file and run ``kubectl apply -f traefik-routes.yaml`` to update **Traefik**.
-
-   .. figure:: media/92.png
-
-#. Replace *<TRAEFIK-EXTERNAL-IP>* and run the following command in **PowerShell**:
-
-   .. code-block:: powershell
-
-      Add-Content -Path C:\Windows\System32\drivers\etc\hosts -Value "<TRAEFIK-EXTERNAL-IP>`tk10.lab.local" -Force
-      cat C:\Windows\System32\drivers\etc\hosts
-
-   Similar to **fiesta-web** and **Grafana**, this will add your **hosts** file record mapping **k10.lab.local** to your **Traefik** external IP address.
-
-#. Open http://k10.lab.local/k10/#/ in your **USER**\ *##*\ **-WinToolsVM** VM.
 
 Configuring K10
 ...............
