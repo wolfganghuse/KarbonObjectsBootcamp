@@ -594,6 +594,385 @@ To graphically manage the K8S cluster, the LENS IDE can be used.
 
 -  You’ll now see all K8S ressources graphically.
 
+Backing Up Cloud Native Apps
+++++++++++++++++++++++++++++
+
+Even though many container workloads are stateless, backup matters in Kubernetes! Think about it, with a single ``kubectl`` command you could wipe out an entire namespace containing multiple applications. Restoring workloads to a specific point in time needs to be equally as easy. In addition, backup can also be a critical component of regulatory compliance.
+
+In this exercise we will deploy **Kasten K10**, a **Veeam** solution that integrates with **Nutanix Objects** to provide Kubernetes backup capabilities.
+
+Configuring Objects Storage
+...........................
+
+In order to provide a storage target for our backup solution, we first need to configure access permissions and provision a **Bucket** within our pre-staged **Nutanix Objects Object Store**.
+
+#. In **Prism Central**, select :fa:`bars` **> Services > Objects**.
+
+#. Under **Access Keys**, select **+ Add People**.
+
+   .. figure:: images/77.png
+
+#. Select **Add people not in a directory service**.
+
+#. Fill out the following fields:
+
+   - **Email Address** - user\ *##*\ \-k10@lab.local (ex. \user01-k10@lab.local)
+   - **Name** - user\ *##*\ -k10 (ex. user01-k10)
+
+   .. figure:: images/78.png
+
+#. Click **Next**.
+
+#. Click **Generate Keys**.
+
+#. Click **Download Keys** *before* clicking **Close**, otherwise you will be unable to access your keys.
+
+   .. figure:: images/79.png
+
+   This will download a file containing the **Access Key** and **Secret Key** you will need to access your S3 storage in an upcoming exercise.
+
+#. Under **Object Stores**, click **ntnx-objects** to open your existing Object Store in a new tab.
+
+   .. figure:: images/80.png
+
+#. Click **Create Bucket**.
+
+#. Fill out the following fields:
+
+   - **Name** - user\ *##*\ -k10-bucket (ex. user01-k10-bucket)
+   - **Object Versions** - *Leave default*
+   - **Lifecycle Policies** - *Leave default*
+
+   .. figure:: images/81.png
+
+#. Click **Create**.
+
+   Now that the bucket exists, we must allow our **user**\ *##*\ **-k10** account to access it.
+
+#. Click your **user**\ *##*\ **-k10-bucket** and select **User Access** from the left-hand menu.
+
+#. Click **Edit User Access**.
+
+#. Fill out the following fields:
+
+   - **People** - user\ *##*\ \-k10@lab.local
+   - **Permissions** - Read; Write
+
+   .. figure:: images/82.png
+
+#. Click **Save**.
+
+Configuring DNS
+...............
+
+In order for our **K10** application to connect to our Objects bucket as a storage target, it needs to be able to access the bucket via DNS, not IP address. To do this we will need to add the appropriate DNS record for our bucket to the **NTNXLAB.local** DNS server, and update our Karbon cluster to use that DNS server.
+
+#. In **Prism Central**, select :fa:`bars` **> Services > Objects**.
+
+#. Note your **Objects Public IP**. This is the IP used to create client connections to your bucket via S3 APIs.
+
+   .. figure:: images/83.png
+
+   You will need this IP in the following steps.
+
+#. Paste the following into your **USER**\ *##*\ **-WinToolsVM** and replace *<YOUR-BUCKET-NAME>* and *<OBJECTS-PUBLIC-IP>* with your values:
+
+   .. code-block:: powershell
+
+      Invoke-Command -ComputerName dc.ntnxlab.local -ScriptBlock {Add-DnsServerResourceRecordA -Name "ntnx-objects" -ZoneName "ntnxlab.local" -AllowUpdateAny -IPv4Address "<OBJECTS-PUBLIC-IP>"}
+      Invoke-Command -ComputerName dc.ntnxlab.local -ScriptBlock {Add-DnsServerResourceRecordA -Name "<YOUR-BUCKET-NAME>.ntnx-objects" -ZoneName "ntnxlab.local" -AllowUpdateAny -IPv4Address "<OBJECTS-PUBLIC-IP>"}
+
+#. Run the commands in **PowerShell**.
+
+   .. figure:: images/84.png
+
+   This will create a **ntnx-objects** subdomain, which corresponds to the name of your Object Store, and a DNS A record for your bucket.
+
+   .. note::
+
+      If the command fails to authenticate to **dc.ntnxlab.local**, you are likely logged into your **USER**\ *##*\ **-WinToolsVM** VM as the **local** Administrator account. You need to be logged in as **NTNXLAB\\Administrator**.
+
+      If the first command fails with **Failed to create resource record ntnx-objects in zone ntnxlab.local on server DC**, this is OK. It means that someone else on your cluster has already run the command to create the subdomain.
+
+#. Run ``ping <YOUR-BUCKET-NAME>.ntnx-objects.ntnxlab.local`` to verify you can resolve the name.
+
+   .. note::
+
+      If you are unable to ping your entry and believe you have made a typo, you can remove your A Record by running the command below and then attempt to re-add.
+
+      ``Invoke-Command -ComputerName dc.ntnxlab.local -ScriptBlock {Remove-DnsServerResourceRecord -Name "<YOUR-BUCKET-NAME>.ntnx-objects" -ZoneName "ntnxlab.local" -RRType "A"}``
+
+      *Or* you launch **Administrative Tools > DNS Manager** from your **USER**\ *##*\ **-WinToolsVM** VM and connect to **DC.ntnxlab.local** to modify using the UI. *Do not modify other DNS records!*
+
+   Next we'll update the DNS configuration for the Kubernetes cluster.
+
+   .. raw:: html
+
+      <BR><font color="#FF0000"><strong>Pay close attention to the following steps. You will be editing network configuration for your Kubernetes cluster and a mistake could leave you unable to access the cluster.</strong></font><BR><BR>
+
+#. Run ``kubectl -n kube-system edit configmap coredns``.
+
+   This will open the cluster DNS **ConfigMap** in **Notepad**.
+
+#. Insert the following *before* the line **kind: ConfigMap** in the file:
+
+   .. code-block:: yaml
+
+      ntnxlab.local:53 {
+         errors
+         cache 30
+         forward . <AUTO AD Server>
+      }
+
+#. Replace *<AUTO AD Server>* with the IP of your **NTNXLAB.local** Domain Controller. See :ref:`clusterdetails`.
+
+#. Ensure the indentation of the **YAML** file is correct. After pasting the contents into the file, each line should be indented by 4 spaces from the left edge, as shown below.
+
+   .. figure:: images/85.png
+
+#. Save the file and close **Notepad**.
+
+   .. note::
+
+      If you formatted the file incorrectly, the file will re-open. Refer to the screenshot above to correct your indentation.
+
+#. Run ``kubectl -n kube-system describe configmap coredns`` to verify the configuration has been updated.
+
+   .. figure:: images/86.png
+
+   This will tell the DNS service in Kubernetes to forward DNS requests **ntnxlab.local** (and any subdomains) to your Domain Controller's IP address, allowing the **K10** application to resolve the name of your bucket.
+
+   *Isn't networking fun?!*
+
+Installing K10
+..............
+
+Up to this point, we have used manually created manifest files to deploy our applications. For **K10** we will look at a more user friendly way to deploy apps using **Helm**. `Helm <https://helm.sh/>`_ is a community built and maintained package management tool for Kubernetes, similar to **yum** in CentOS or **npm** in Node.
+
+#. In **PowerShell**, run the following:
+
+   .. code-block:: bash
+
+      kubectl create namespace kasten-io
+      helm repo add kasten https://charts.kasten.io/
+      helm repo update
+      helm install k10 kasten/k10 --namespace=kasten-io
+
+   This will define a namespace on the **Kubernetes** cluster in which to manage and monitor the app, add the repository to **Helm** in order to download **K10**, and then install the application.
+
+#. Monitor the deployment in **Lens > Workloads > Pods**.
+
+   .. figure:: images/89.png
+
+   Select the **kasten-io** namespace and wait until all Pods are in a **Running** state, this should take < 5 minutes.
+
+   .. note::
+
+      You may need to close/re-open **Lens** in order to see the new **kasten-io** namespace.
+
+   Similar to our other deployments, we will use Traefik to enable external access to the **K10** frontend. However, we can first quickly verify the app is up and running ``kubectl`` as a temporary proxy.
+
+#. In **Powershell**, run ``kubectl --namespace kasten-io port-forward service/gateway 8080:8000``
+
+#. Open http://127.0.0.1:8080/k10/#/ in your **USER**\ *##*\ **-WinToolsVM** browser.
+
+   .. figure:: images/91.png
+
+   If your deployment was successful, you will be prompted with the EULA.
+
+#. Press **Ctrl+C** in **PowerShell** to stop the proxy.
+
+Adding K10 Traefik Route
+........................
+
+#. In **Visual Studio Code**, open your existing **traefik-routes.yaml** file.
+
+#. Paste the following to the end of your file:
+
+   .. code-block:: yaml
+
+      ---
+      apiVersion: traefik.containo.us/v1alpha1
+      kind: IngressRoute
+      metadata:
+        name: simpleingressroute
+        namespace: kasten-io
+      spec:
+        entryPoints:
+          - web
+        routes:
+        - match: Host(`k10.lab.local`)
+          kind: Rule
+          services:
+          - name: gateway
+            port: 8000
+
+#. Save the file and run ``kubectl apply -f traefik-routes.yaml`` to update **Traefik**.
+
+   .. figure:: images/92.png
+
+#. Replace *<TRAEFIK-EXTERNAL-IP>* and run the following command in **PowerShell**:
+
+   .. code-block:: powershell
+
+      Add-Content -Path C:\Windows\System32\drivers\etc\hosts -Value "<TRAEFIK-EXTERNAL-IP>`tk10.lab.local" -Force
+      cat C:\Windows\System32\drivers\etc\hosts
+
+   Similar to **fiesta-web** and **Grafana**, this will add your **hosts** file record mapping **k10.lab.local** to your **Traefik** external IP address.
+
+#. Open http://k10.lab.local/k10/#/ in your **USER**\ *##*\ **-WinToolsVM** VM.
+
+Configuring K10
+...............
+
+Now that we have prepared our storage target and deployed **K10**, we're ready to configure **K10** to use our Objects storage and create our first backup policy.
+
+#. In your browser, **Accept** the **K10** EULA.
+
+   .. note::
+
+      If prompted to **Take a Quick Tour**, click **No**.
+
+   You should now see the **K10** dashboard, including multiple applications that have already been discovered on your cluster.
+
+#. Click **Settings**.
+
+   .. figure:: images/93b.png
+
+#. Under **Location Profiles**, click **+ New Profile**.
+
+#. Fill out the following fields:
+
+   - **Profile Name** - nutanix-objects
+   - **Cloud Storage Provider** - S3 Compatible
+   - **S3 Access Key** - *From your user##-k10@lab.local-keys-<DATE>.txt file downloaded from Objects*
+   - **S3 Secret** - *From your user##-k10@lab.local-keys-<DATE>.txt file downloaded from Objects*
+   - **Endpoint** - https://ntnx-objects.ntnxlab.local
+   - Select **Skip certificate chain and hostname verification**
+   - **Region** - *Leave blank*
+   - **Bucket Name** - user\ *##*\ -k10-bucket
+
+   .. figure:: images/95.png
+
+   .. note::
+
+      Don't worry Sebastien, these keys aren't valid.
+
+#. Click **Save Profile**.
+
+   You should see a green dialog indicating the connection was successful. Otherwise, ensure your profile inputs are accurate and try saving again.
+
+   Next we'll configure a backup policy.
+
+#. Click **< Dashboard** to return to the **K10** dashboard.
+
+   .. figure:: images/96.png
+
+#. Under **Applications**, select **Unmanaged**.
+
+#. Under **default**, click **Create Policy**.
+
+   .. figure:: images/97.png
+
+   Each of the boxes map to a specific Namespace in your Kubernetes cluster.
+
+#. In the **New Policy** window, leave all of the default snapshot frequency settings.
+
+#. Select **Enable Backups via Snapshot Exports** and ensure **Export Location Profile** is set to your **nutanix-objects** profile.
+
+   .. figure:: images/98.png
+
+   This will export the snapshots created by K10 to your S3 bucket.
+
+#. Click **Create Policy**.
+
+   Instead of waiting for the next scheduled snapshot to take place, we'll force the first backup.
+
+#. Click **Run Once** and **Run Policy**.
+
+   .. figure:: images/99.png
+
+#. Click **< Dashboard**.
+
+#. Under **Activity**, you should see your backup job complete after a few seconds. Select it and view the resources that were exported as part of the backup.
+
+   .. figure:: images/100.png
+
+Restoring K10 Backups
+.....................
+
+Now that we have a successful backup, we can restore "clones" of your applications to a separate namespace on the cluster.
+
+#. Select **Applications** from the **K10** dashboard.
+
+#. Under the **default** namespace, click **Restore**.
+
+   .. figure:: images/101.png
+
+#. Select your **default-backup** restore point and then click the **EXPORTED** version.
+
+   .. figure:: images/102.png
+
+   This will ensure we're restoring the data from the Nutanix Objects bucket, and not a local snapshot.
+
+#. Under **Restore Point > Application Name**, click **+ Create A New Namespace**:
+
+   - **New Namespace** - default-restore
+
+   .. figure:: images/103.png
+
+   This will update the **Application Name** to your new namespace.
+
+#. Under **Restore Point > Artifacts**, click **Deselect All Artifacts**.
+
+#. Select only your **fiesta-web-pods** Deployment and your **fiesta-web-svc** Service.
+
+   .. figure:: images/104.png
+
+#. Click the **Restore > Restore** button to start the restore process.
+
+   .. note::
+
+      You may see a *Slow Connection* message pop up. This can be safely ignored.
+
+#. Click **< Dashboard** to return to the dashboard.
+
+   Under **Activity**, you should see your restore operation either **Running** or **Completed**.
+
+   .. figure:: images/105.png
+
+#. In **Lens > Workloads > Pods**, filter for your **default-restore** namespace and observe your Fiesta pods running.
+
+   .. figure:: images/106.png
+
+   *Based on what you've learned so far in the lab, can you build a Traefik route to connect to your default-restore version of your app?*
+
+#. Return to **Prism Central >** :fa:`bars` **> Services > Objects > ntnx-objects** and click your bucket.
+
+   Here you can view the number of objects stored within the bucket and the storage being consumed.
+
+#. Select **Performance** from the left-hand menu to view the load your backup policy has applied to the bucket.
+
+   .. figure:: images/107.png
+
+#. You can also view the bucket contents using the built-in Objects Browser by opening \http://*<OBJECT-STORE-PUBLIC-IP>*:7200 in your browser and logging in with the keys assigned to your **user**\ *##*\ **-k10** user.
+
+   .. figure:: images/108.png
+
+   .. note::
+
+      The snapshot exports from **K10** aren't human readable, so don't expect to find your original **YAML** files!
+
+.. raw:: html
+
+    <H1><a href="http://lookup.ntnxworkshops.com/" target="_blank"><font color="#B0D235"><center>Click Here To Submit Validation Request</center></font></a></H1>
+
+After completing these exercises you should now be more familiar with the infrastructure considerations for production Kubernetes environments.
+
+Nutanix Karbon provides significant value in the deployment and management of your Kubernetes infrastructure, while still providing an open platform capable of integrating with other stack components for logging, monitoring, backup, and more.
+
+
+
 For Instructors
 ===============
 
