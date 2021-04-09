@@ -5,6 +5,7 @@
 #
 #sphinx_fontawesome
 rtcat_sphinx_theme
+sphinx-copybutton
 ###### Requirements with Version Specifiers ######
 #
 #docopt == 0.6.1             # Version Matching. Must be version 0.6.1
