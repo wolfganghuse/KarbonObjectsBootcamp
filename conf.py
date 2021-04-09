@@ -31,7 +31,7 @@ release = '0.0.1'
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 #extensions = ['sphinx_fontawesome']
-extensions = ['sphinx_rtd_theme']
+extensions = ['sphinx_rtd_theme','sphinx_copybutton']
 
 
 # Add any paths that contain templates here, relative to this directory.
