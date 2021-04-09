@@ -520,7 +520,7 @@ Configuring Objects Storage
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 In order to provide a storage target for our backup solution, we will add another **Bucket** within our pre-staged **Nutanix Objects Object Store**.
-#. In **Prism Central**, select :fa:`bars` **> Services > Objects**.
+#. In **Prism Central**, select \ |image4| **> Services > Objects**.
 
 #. Under **Object Stores**, open your existing Object Store in a new tab.
 
