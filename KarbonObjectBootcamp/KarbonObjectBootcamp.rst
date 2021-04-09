@@ -62,9 +62,6 @@ indicated how to get it on the documentation when needed.
 Objects
 -------
 
-**This is a showcase, do not click on create, and click cancel afterwards, as an object store has 
-already been created for you.**
-
 -  With Google Chrome, **connect** to the **Prism Central** (as provided
    in Ressources lab document), click on the\ |image4| Burger Menu,click 
    **Services**, click **Objects**
@@ -163,7 +160,6 @@ Era
 
 https://karbon-bootcamp.s3.eu-west-3.amazonaws.com/ssh-public-key.txt
 
-https://karbon-bootcamp.s3.eu-west-3.amazonaws.com/ssh-public-key.txt
 
 -  Click next, enter the following information
 
@@ -602,7 +598,7 @@ Even though many container workloads are stateless, backup matters in Kubernetes
 In this exercise we will deploy **Kasten K10**, a **Veeam** solution that integrates with **Nutanix Objects** to provide Kubernetes backup capabilities.
 
 Configuring Objects Storage
-...........................
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 In order to provide a storage target for our backup solution, we will add another **Bucket** within our pre-staged **Nutanix Objects Object Store**.
 #. In **Prism Central**, select :fa:`bars` **> Services > Objects**.
@@ -628,7 +624,7 @@ In order to provide a storage target for our backup solution, we will add anothe
 -  Check permission Read and Write / Save
 
 Installing K10
-..............
+~~~~~~~~~~~~~~
 
 Up to this point, we have used manually created manifest files to deploy our applications. For **K10** we will look at a more user friendly way to deploy apps using **Helm**. `Helm <https://helm.sh/>`_ is a community built and maintained package management tool for Kubernetes, similar to **yum** in CentOS or **npm** in Node.
 
@@ -678,7 +674,7 @@ Up to this point, we have used manually created manifest files to deploy our app
 
 
 Configuring K10
-...............
+~~~~~~~~~~~~~~~
 
 Now that we have prepared our storage target and deployed **K10**, we're ready to configure **K10** to use our Objects storage and create our first backup policy.
 
@@ -748,7 +744,7 @@ Now that we have prepared our storage target and deployed **K10**, we're ready t
    .. figure:: media/100.png
 
 Restoring K10 Backups
-.....................
+~~~~~~~~~~~~~~~~~~~~~
 
 Now that we have a successful backup, we can restore "clones" of your applications to a separate namespace on the cluster.
 
