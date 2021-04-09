@@ -610,7 +610,7 @@ In order to provide a storage target for our backup solution, we first need to c
 
 #. Under **Access Keys**, select **+ Add People**.
 
-   .. figure:: images/77.png
+   .. figure:: media/77.png
 
 #. Select **Add people not in a directory service**.
 
@@ -619,7 +619,7 @@ In order to provide a storage target for our backup solution, we first need to c
    - **Email Address** - user\ *##*\ \-k10@lab.local (ex. \user01-k10@lab.local)
    - **Name** - user\ *##*\ -k10 (ex. user01-k10)
 
-   .. figure:: images/78.png
+   .. figure:: media/78.png
 
 #. Click **Next**.
 
@@ -627,13 +627,13 @@ In order to provide a storage target for our backup solution, we first need to c
 
 #. Click **Download Keys** *before* clicking **Close**, otherwise you will be unable to access your keys.
 
-   .. figure:: images/79.png
+   .. figure:: media/79.png
 
    This will download a file containing the **Access Key** and **Secret Key** you will need to access your S3 storage in an upcoming exercise.
 
 #. Under **Object Stores**, click **ntnx-objects** to open your existing Object Store in a new tab.
 
-   .. figure:: images/80.png
+   .. figure:: media/80.png
 
 #. Click **Create Bucket**.
 
@@ -643,7 +643,7 @@ In order to provide a storage target for our backup solution, we first need to c
    - **Object Versions** - *Leave default*
    - **Lifecycle Policies** - *Leave default*
 
-   .. figure:: images/81.png
+   .. figure:: media/81.png
 
 #. Click **Create**.
 
@@ -658,7 +658,7 @@ In order to provide a storage target for our backup solution, we first need to c
    - **People** - user\ *##*\ \-k10@lab.local
    - **Permissions** - Read; Write
 
-   .. figure:: images/82.png
+   .. figure:: media/82.png
 
 #. Click **Save**.
 
@@ -671,7 +671,7 @@ In order for our **K10** application to connect to our Objects bucket as a stora
 
 #. Note your **Objects Public IP**. This is the IP used to create client connections to your bucket via S3 APIs.
 
-   .. figure:: images/83.png
+   .. figure:: media/83.png
 
    You will need this IP in the following steps.
 
@@ -684,7 +684,7 @@ In order for our **K10** application to connect to our Objects bucket as a stora
 
 #. Run the commands in **PowerShell**.
 
-   .. figure:: images/84.png
+   .. figure:: media/84.png
 
    This will create a **ntnx-objects** subdomain, which corresponds to the name of your Object Store, and a DNS A record for your bucket.
 
@@ -728,7 +728,7 @@ In order for our **K10** application to connect to our Objects bucket as a stora
 
 #. Ensure the indentation of the **YAML** file is correct. After pasting the contents into the file, each line should be indented by 4 spaces from the left edge, as shown below.
 
-   .. figure:: images/85.png
+   .. figure:: media/85.png
 
 #. Save the file and close **Notepad**.
 
@@ -738,7 +738,7 @@ In order for our **K10** application to connect to our Objects bucket as a stora
 
 #. Run ``kubectl -n kube-system describe configmap coredns`` to verify the configuration has been updated.
 
-   .. figure:: images/86.png
+   .. figure:: media/86.png
 
    This will tell the DNS service in Kubernetes to forward DNS requests **ntnxlab.local** (and any subdomains) to your Domain Controller's IP address, allowing the **K10** application to resolve the name of your bucket.
 
@@ -762,7 +762,7 @@ Up to this point, we have used manually created manifest files to deploy our app
 
 #. Monitor the deployment in **Lens > Workloads > Pods**.
 
-   .. figure:: images/89.png
+   .. figure:: media/89.png
 
    Select the **kasten-io** namespace and wait until all Pods are in a **Running** state, this should take < 5 minutes.
 
@@ -776,7 +776,7 @@ Up to this point, we have used manually created manifest files to deploy our app
 
 #. Open http://127.0.0.1:8080/k10/#/ in your **USER**\ *##*\ **-WinToolsVM** browser.
 
-   .. figure:: images/91.png
+   .. figure:: media/91.png
 
    If your deployment was successful, you will be prompted with the EULA.
 
@@ -809,7 +809,7 @@ Adding K10 Traefik Route
 
 #. Save the file and run ``kubectl apply -f traefik-routes.yaml`` to update **Traefik**.
 
-   .. figure:: images/92.png
+   .. figure:: media/92.png
 
 #. Replace *<TRAEFIK-EXTERNAL-IP>* and run the following command in **PowerShell**:
 
@@ -837,7 +837,7 @@ Now that we have prepared our storage target and deployed **K10**, we're ready t
 
 #. Click **Settings**.
 
-   .. figure:: images/93b.png
+   .. figure:: media/93b.png
 
 #. Under **Location Profiles**, click **+ New Profile**.
 
@@ -852,7 +852,7 @@ Now that we have prepared our storage target and deployed **K10**, we're ready t
    - **Region** - *Leave blank*
    - **Bucket Name** - user\ *##*\ -k10-bucket
 
-   .. figure:: images/95.png
+   .. figure:: media/95.png
 
    .. note::
 
@@ -866,13 +866,13 @@ Now that we have prepared our storage target and deployed **K10**, we're ready t
 
 #. Click **< Dashboard** to return to the **K10** dashboard.
 
-   .. figure:: images/96.png
+   .. figure:: media/96.png
 
 #. Under **Applications**, select **Unmanaged**.
 
 #. Under **default**, click **Create Policy**.
 
-   .. figure:: images/97.png
+   .. figure:: media/97.png
 
    Each of the boxes map to a specific Namespace in your Kubernetes cluster.
 
@@ -880,7 +880,7 @@ Now that we have prepared our storage target and deployed **K10**, we're ready t
 
 #. Select **Enable Backups via Snapshot Exports** and ensure **Export Location Profile** is set to your **nutanix-objects** profile.
 
-   .. figure:: images/98.png
+   .. figure:: media/98.png
 
    This will export the snapshots created by K10 to your S3 bucket.
 
@@ -890,13 +890,13 @@ Now that we have prepared our storage target and deployed **K10**, we're ready t
 
 #. Click **Run Once** and **Run Policy**.
 
-   .. figure:: images/99.png
+   .. figure:: media/99.png
 
 #. Click **< Dashboard**.
 
 #. Under **Activity**, you should see your backup job complete after a few seconds. Select it and view the resources that were exported as part of the backup.
 
-   .. figure:: images/100.png
+   .. figure:: media/100.png
 
 Restoring K10 Backups
 .....................
@@ -907,11 +907,11 @@ Now that we have a successful backup, we can restore "clones" of your applicatio
 
 #. Under the **default** namespace, click **Restore**.
 
-   .. figure:: images/101.png
+   .. figure:: media/101.png
 
 #. Select your **default-backup** restore point and then click the **EXPORTED** version.
 
-   .. figure:: images/102.png
+   .. figure:: media/102.png
 
    This will ensure we're restoring the data from the Nutanix Objects bucket, and not a local snapshot.
 
@@ -919,7 +919,7 @@ Now that we have a successful backup, we can restore "clones" of your applicatio
 
    - **New Namespace** - default-restore
 
-   .. figure:: images/103.png
+   .. figure:: media/103.png
 
    This will update the **Application Name** to your new namespace.
 
@@ -927,7 +927,7 @@ Now that we have a successful backup, we can restore "clones" of your applicatio
 
 #. Select only your **fiesta-web-pods** Deployment and your **fiesta-web-svc** Service.
 
-   .. figure:: images/104.png
+   .. figure:: media/104.png
 
 #. Click the **Restore > Restore** button to start the restore process.
 
@@ -939,11 +939,11 @@ Now that we have a successful backup, we can restore "clones" of your applicatio
 
    Under **Activity**, you should see your restore operation either **Running** or **Completed**.
 
-   .. figure:: images/105.png
+   .. figure:: media/105.png
 
 #. In **Lens > Workloads > Pods**, filter for your **default-restore** namespace and observe your Fiesta pods running.
 
-   .. figure:: images/106.png
+   .. figure:: media/106.png
 
    *Based on what you've learned so far in the lab, can you build a Traefik route to connect to your default-restore version of your app?*
 
@@ -953,11 +953,11 @@ Now that we have a successful backup, we can restore "clones" of your applicatio
 
 #. Select **Performance** from the left-hand menu to view the load your backup policy has applied to the bucket.
 
-   .. figure:: images/107.png
+   .. figure:: media/107.png
 
 #. You can also view the bucket contents using the built-in Objects Browser by opening \http://*<OBJECT-STORE-PUBLIC-IP>*:7200 in your browser and logging in with the keys assigned to your **user**\ *##*\ **-k10** user.
 
-   .. figure:: images/108.png
+   .. figure:: media/108.png
 
    .. note::
 
