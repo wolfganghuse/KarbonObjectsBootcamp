@@ -639,7 +639,7 @@ Up to this point, we have used manually created manifest files to deploy our app
       kubectl create namespace kasten-io
       helm repo add kasten https://charts.kasten.io/
       helm repo update
-      helm install k10 kasten/k10 --namespace=kasten-io
+      helm install k10 kasten/k10 --namespace=kasten-io --set externalGateway.create=true
 
    This will define a namespace on the **Kubernetes** cluster in which to manage and monitor the app, add the repository to **Helm** in order to download **K10**, and then install the application.
 
@@ -656,11 +656,7 @@ Up to this point, we have used manually created manifest files to deploy our app
 
       kubectl get pods -n kasten-io
 
-   Similar to our other deployments, we will expose the Port to enable external access to the **K10** frontend. 
-
-   .. code-block:: Bash
-    
-      k expose deployment nextcloud --type=LoadBalancer --name=nextcloud --port=80 --target-port=80
+   Similar to our other deployments, external access to the **K10** frontend is possible via LoadBalancer. This time it was setup automatically by Helm. 
 
    Retrieve the External-IP address of the deployment
 
