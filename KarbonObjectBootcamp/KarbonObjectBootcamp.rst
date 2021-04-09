@@ -658,10 +658,9 @@ Up to this point, we have used manually created manifest files to deploy our app
 
    Similar to our other deployments, external access to the **K10** frontend is possible via LoadBalancer. This time it was setup automatically by Helm. 
 
-   Before accessing the GUI we need to create a Service Account and fetch the neccessary AuthToken:
+   Before accessing the GUI we need to fetch the neccessary AuthToken from automatically created Admin-Accoung (k10-k10):
    ..code-block:: bash
-      k create serviceaccount my-kasten-sa --namespace kasten-io
-      sa_secret=$(kubectl get serviceaccount my-kasten-sa -o jsonpath="{.secrets[0].name}" --namespace kasten-io)
+      sa_secret=$(kubectl get serviceaccount k10-k10 -o jsonpath="{.secrets[0].name}" --namespace kasten-io)
       kubectl get secret $sa_secret --namespace kasten-io -ojsonpath="{.data.token}{'\n'}" | base64 --decode
 
    Copy the displayed Auth-Token, we will need it to access the GUI
@@ -695,7 +694,7 @@ Now that we have prepared our storage target and deployed **K10**, we're ready t
 
    .. figure:: media/93b.png
 
-#. Under **Location Profiles**, click **+ New Profile**.
+#. Under **Location Profiles**, click **+New Profile**.
 
 #. Fill out the following fields:
 
@@ -775,7 +774,7 @@ Now that we have a successful backup, we can restore "clones" of your applicatio
 
 #. Under **Restore Point > Artifacts**, click **Deselect All Artifacts**.
 
-#. Select only your **fiesta-web-pods** Deployment and your **fiesta-web-svc** Service.
+#. Select only your **nextcloud** Deployment and your **nextcloud** Service.
 
    .. figure:: media/104.png
 
