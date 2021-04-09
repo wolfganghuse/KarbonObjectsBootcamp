@@ -712,9 +712,7 @@ Now that we have a successful backup, we can restore "clones" of your applicatio
 
    .. figure:: media/106.png
 
-   *Based on what you've learned so far in the lab, can you build a Traefik route to connect to your default-restore version of your app?*
-
-#. Return to **Prism Central >** :fa:`bars` **> Services > Objects > ntnx-objects** and click your bucket.
+#. Return to **Prism Central >** \ |image4| **> Services > Objects > ntnx-objects** and click your bucket.
 
    Here you can view the number of objects stored within the bucket and the storage being consumed.
 
