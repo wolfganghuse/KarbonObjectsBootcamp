@@ -613,7 +613,7 @@ In order to provide a storage target for our backup solution, we will add anothe
 
 -  Click on Create Bucket
 
-   -  Name : k10backup-yourinitials
+   -  Name : k10backup-*yourinitials*
 
    -  Check Enable versioning
 
@@ -692,18 +692,12 @@ Now that we have prepared our storage target and deployed **K10**, we're ready t
 
    - **Profile Name** - nutanix-objects
    - **Cloud Storage Provider** - S3 Compatible
-   - **S3 Access Key** - *From your user##-k10@lab.local-keys-<DATE>.txt file downloaded from Objects*
-   - **S3 Secret** - *From your user##-k10@lab.local-keys-<DATE>.txt file downloaded from Objects*
-   - **Endpoint** - https://ntnx-objects.ntnxlab.local
+   - **S3 Access Key** - *From your Credentials txt file downloaded from Objects*
+   - **S3 Secret** - *From your Credentials txt file downloaded from Objects*
+   - **Endpoint** - https://*PublicIPofYourObjectsStore*
    - Select **Skip certificate chain and hostname verification**
    - **Region** - *Leave blank*
-   - **Bucket Name** - user\ *##*\ -k10-bucket
-
-   .. figure:: media/95.png
-
-   .. note::
-
-      Don't worry Sebastien, these keys aren't valid.
+   - **Bucket Name** - k10backup-*yourinitials*
 
 #. Click **Save Profile**.
 
