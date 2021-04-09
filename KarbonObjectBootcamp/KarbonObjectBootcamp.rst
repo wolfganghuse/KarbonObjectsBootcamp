@@ -604,63 +604,28 @@ In this exercise we will deploy **Kasten K10**, a **Veeam** solution that integr
 Configuring Objects Storage
 ...........................
 
-In order to provide a storage target for our backup solution, we first need to configure access permissions and provision a **Bucket** within our pre-staged **Nutanix Objects Object Store**.
-
+In order to provide a storage target for our backup solution, we will add another **Bucket** within our pre-staged **Nutanix Objects Object Store**.
 #. In **Prism Central**, select :fa:`bars` **> Services > Objects**.
 
-#. Under **Access Keys**, select **+ Add People**.
-
-   .. figure:: media/77.png
-
-#. Select **Add people not in a directory service**.
-
-#. Fill out the following fields:
-
-   - **Email Address** - user\ *##*\ \-k10@lab.local (ex. \user01-k10@lab.local)
-   - **Name** - user\ *##*\ -k10 (ex. user01-k10)
-
-   .. figure:: media/78.png
-
-#. Click **Next**.
-
-#. Click **Generate Keys**.
-
-#. Click **Download Keys** *before* clicking **Close**, otherwise you will be unable to access your keys.
-
-   .. figure:: media/79.png
-
-   This will download a file containing the **Access Key** and **Secret Key** you will need to access your S3 storage in an upcoming exercise.
-
-#. Under **Object Stores**, click **ntnx-objects** to open your existing Object Store in a new tab.
+#. Under **Object Stores**, open your existing Object Store in a new tab.
 
    .. figure:: media/80.png
 
-#. Click **Create Bucket**.
+-  Click on Create Bucket
 
-#. Fill out the following fields:
+   -  Name : nextcloud-yourinitials
 
-   - **Name** - user\ *##*\ -k10-bucket (ex. user01-k10-bucket)
-   - **Object Versions** - *Leave default*
-   - **Lifecycle Policies** - *Leave default*
+   -  Check Enable versioning
 
-   .. figure:: media/81.png
+   -  Click create
 
-#. Click **Create**.
+-  Click on the newly created bucket
 
-   Now that the bucket exists, we must allow our **user**\ *##*\ **-k10** account to access it.
+-  Go to User Access on the left / Edit User Access
 
-#. Click your **user**\ *##*\ **-k10-bucket** and select **User Access** from the left-hand menu.
+-  Search for people your-initial@demo.com
 
-#. Click **Edit User Access**.
-
-#. Fill out the following fields:
-
-   - **People** - user\ *##*\ \-k10@lab.local
-   - **Permissions** - Read; Write
-
-   .. figure:: media/82.png
-
-#. Click **Save**.
+-  Check permission Read and Write / Save
 
 Configuring DNS
 ...............
