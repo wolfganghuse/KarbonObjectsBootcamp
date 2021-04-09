@@ -489,6 +489,250 @@ Check the Embedded Nutanix Object Browser
 -  Check if your uploaded files appear in the bucket to verify your
    configuration/setup
 
+   Manage your Kubernetes Cluster with LENS IDE
+--------------------------------------------
+
+On your jumphost, download and install the LENS Kubernetes IDE located
+at this address: https://k8slens.dev/ Choose the current
+Lens-Setup-x.x.x.exe
+
+To graphically manage the K8S cluster, the LENS IDE can be used.
+
+-  Open the LENS IDEN
+
+-  Click File / Add Cluster
+
+-  Select the previously downloaded kube configuration file and keep the
+   default value / Add cluster(s)
+
+-  You’ll now see all K8S ressources graphically.
+
+   Backing Up Cloud Native Apps
+   ----------------------------
+   
+   Even though many container workloads are stateless, backup matters in Kubernetes! Think about it, with a single ``kubectl`` command you could wipe out an entire namespace containing multiple applications. Restoring workloads to a specific point in time needs to be equally as easy. In addition, backup can also be a critical component of regulatory compliance.
+   
+   In this exercise we will deploy **Kasten K10**, a **Veeam** solution that integrates with **Nutanix Objects** to provide Kubernetes backup capabilities.
+   
+   Configuring Objects Storage
+   ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   
+   In order to provide a storage target for our backup solution, we will add another **Bucket** within our pre-staged **Nutanix Objects Object Store**.
+   #. In **Prism Central**, select :fa:`bars` **> Services > Objects**.
+   
+   #. Under **Object Stores**, open your existing Object Store in a new tab.
+   
+      .. figure:: media/80.png
+   
+   -  Click on Create Bucket
+   
+      -  Name : k10backup-*yourinitials*
+   
+      -  Check Enable versioning
+   
+      -  Click create
+   
+   -  Click on the newly created bucket
+   
+   -  Go to User Access on the left / Edit User Access
+   
+   -  Search for people your-initial@demo.com
+   
+   -  Check permission Read and Write / Save
+   
+   Installing K10
+   ~~~~~~~~~~~~~~
+   
+   Up to this point, we have used manually created manifest files to deploy our applications. For **K10** we will look at a more user friendly way to deploy apps using **Helm**. `Helm <https://helm.sh/>`_ is a community built and maintained package management tool for Kubernetes, similar to **yum** in CentOS or **npm** in Node.
+   
+   #. On your Jumphost, run the following:
+   
+      .. code-block:: bash
+   
+         kubectl create namespace kasten-io
+         helm repo add kasten https://charts.kasten.io/
+         helm repo update
+         helm install k10 kasten/k10 --namespace=kasten-io --set externalGateway.create=true --set auth.tokenAuth.enabled=true
+   
+      This will define a namespace on the **Kubernetes** cluster in which to manage and monitor the app, add the repository to **Helm** in order to download **K10**, and then install the application.
+   
+   #. Monitor the deployment in **Lens > Workloads > Pods**.
+   
+      Select the **kasten-io** namespace and wait until all Pods are in a **Running** state, this should take < 5 minutes.
+   
+      .. note::
+   
+         You may need to close/re-open **Lens** in order to see the new **kasten-io** namespace.
+   
+      if you don´t installed **Lens** you could also use:
+      .. code-block:: bash
+   
+         kubectl get pods -n kasten-io
+   
+      Similar to our other deployments, external access to the **K10** frontend is possible via LoadBalancer. This time it was setup automatically by Helm. 
+   
+      Before accessing the GUI we need to fetch the neccessary AuthToken from automatically created Admin-Accoung (k10-k10):
+      ..code-block:: bash
+         sa_secret=$(kubectl get serviceaccount k10-k10 -o jsonpath="{.secrets[0].name}" --namespace kasten-io)
+         kubectl get secret $sa_secret --namespace kasten-io -ojsonpath="{.data.token}{'\n'}" | base64 --decode
+   
+      Copy the displayed Auth-Token, we will need it to access the GUI
+   
+      Retrieve the External-IP address of the deployment
+   
+      .. code-block:: Bash 
+       
+         k get services -n kasten-io
+   
+      Open a new tab and use the following Address: 
+         http://SERVICE_EXTERNAL_IP/k10/#/
+   
+      If your deployment was successful, you have to paste the AuthToken and SignIn, afterwards you will be prompted with the EULA.
+   
+   
+   Configuring K10
+   ~~~~~~~~~~~~~~~
+   
+   Now that we have prepared our storage target and deployed **K10**, we're ready to configure **K10** to use our Objects storage and create our first backup policy.
+   
+   #. In your browser, **Accept** the **K10** EULA.
+   
+      .. note::
+   
+         If prompted to **Take a Quick Tour**, click **No**.
+   
+      You should now see the **K10** dashboard, including multiple applications that have already been discovered on your cluster.
+   
+   #. Click **Settings**.
+   
+      .. figure:: media/93b.png
+   
+   #. Under **Location Profiles**, click **+New Profile**.
+   
+   #. Fill out the following fields:
+   
+      - **Profile Name** - nutanix-objects
+      - **Cloud Storage Provider** - S3 Compatible
+      - **S3 Access Key** - *From your Credentials txt file downloaded from Objects*
+      - **S3 Secret** - *From your Credentials txt file downloaded from Objects*
+      - **Endpoint** - https://*PublicIPofYourObjectsStore*
+      - Select **Skip certificate chain and hostname verification**
+      - **Region** - *Leave blank*
+      - **Bucket Name** - k10backup-*yourinitials*
+   
+   #. Click **Save Profile**.
+   
+      You should see a green dialog indicating the connection was successful. Otherwise, ensure your profile inputs are accurate and try saving again.
+   
+      Next we'll configure a backup policy.
+   
+   #. Click **< Dashboard** to return to the **K10** dashboard.
+   
+      .. figure:: media/96.png
+   
+   #. Under **Applications**, select **Unmanaged**.
+   
+   #. Under **default**, click **Create Policy**.
+   
+      .. figure:: media/97.png
+   
+      Each of the boxes map to a specific Namespace in your Kubernetes cluster.
+   
+   #. In the **New Policy** window, leave all of the default snapshot frequency settings.
+   
+   #. Select **Enable Backups via Snapshot Exports** and ensure **Export Location Profile** is set to your **nutanix-objects** profile.
+   
+      .. figure:: media/98.png
+   
+      This will export the snapshots created by K10 to your S3 bucket.
+   
+   #. Click **Create Policy**.
+   
+      Instead of waiting for the next scheduled snapshot to take place, we'll force the first backup.
+   
+   #. Click **Run Once** and **Run Policy**.
+   
+      .. figure:: media/99.png
+   
+   #. Click **< Dashboard**.
+   
+   #. Under **Activity**, you should see your backup job complete after a few seconds. Select it and view the resources that were exported as part of the backup.
+   
+      .. figure:: media/100.png
+   
+   Restoring K10 Backups
+   ~~~~~~~~~~~~~~~~~~~~~
+   
+   Now that we have a successful backup, we can restore "clones" of your applications to a separate namespace on the cluster.
+   
+   #. Select **Applications** from the **K10** dashboard.
+   
+   #. Under the **default** namespace, click **Restore**.
+   
+      .. figure:: media/101.png
+   
+   #. Select your **default-backup** restore point and then click the **EXPORTED** version.
+   
+      .. figure:: media/102.png
+   
+      This will ensure we're restoring the data from the Nutanix Objects bucket, and not a local snapshot.
+   
+   #. Under **Restore Point > Application Name**, click **+ Create A New Namespace**:
+   
+      - **New Namespace** - default-restore
+   
+      .. figure:: media/103.png
+   
+      This will update the **Application Name** to your new namespace.
+   
+   #. Under **Restore Point > Artifacts**, click **Deselect All Artifacts**.
+   
+   #. Select only your **nextcloud** Deployment and your **nextcloud** Service.
+   
+      .. figure:: media/104.png
+   
+   #. Click the **Restore > Restore** button to start the restore process.
+   
+      .. note::
+   
+         You may see a *Slow Connection* message pop up. This can be safely ignored.
+   
+   #. Click **< Dashboard** to return to the dashboard.
+   
+      Under **Activity**, you should see your restore operation either **Running** or **Completed**.
+   
+      .. figure:: media/105.png
+   
+   #. In **Lens > Workloads > Pods**, filter for your **default-restore** namespace and observe your NextCloud pod running.
+   
+      .. figure:: media/106.png
+   
+      *Based on what you've learned so far in the lab, can you build a Traefik route to connect to your default-restore version of your app?*
+   
+   #. Return to **Prism Central >** :fa:`bars` **> Services > Objects > ntnx-objects** and click your bucket.
+   
+      Here you can view the number of objects stored within the bucket and the storage being consumed.
+   
+   #. Select **Performance** from the left-hand menu to view the load your backup policy has applied to the bucket.
+   
+      .. figure:: media/107.png
+   
+   #. You can also view the bucket contents using the built-in Objects Browser by opening \http://*<OBJECT-STORE-PUBLIC-IP>*:7200 in your browser and logging in with the keys assigned to your **user**\ *##*\ **-k10** user.
+   
+      .. figure:: media/108.png
+   
+      .. note::
+   
+         The snapshot exports from **K10** aren't human readable, so don't expect to find your original **YAML** files!
+   
+   .. raw:: html
+   
+   After completing these exercises you should now be more familiar with the infrastructure considerations for production Kubernetes environments.
+   
+   Nutanix Karbon provides significant value in the deployment and management of your Kubernetes infrastructure, while still providing an open platform capable of integrating with other stack components for logging, monitoring, backup, and more.
+
+   
+
 Additional Lab
 --------------
 
@@ -572,247 +816,6 @@ Clone the MariaDB Database
    publish it to the clone you are deploying. Very useful for DEV and
    Test platform.
 
-Manage your Kubernetes Cluster with LENS IDE
---------------------------------------------
-
-On your jumphost, download and install the LENS Kubernetes IDE located
-at this address: https://k8slens.dev/ Choose the current
-Lens-Setup-x.x.x.exe
-
-To graphically manage the K8S cluster, the LENS IDE can be used.
-
--  Open the LENS IDEN
-
--  Click File / Add Cluster
-
--  Select the previously downloaded kube configuration file and keep the
-   default value / Add cluster(s)
-
--  You’ll now see all K8S ressources graphically.
-
-Backing Up Cloud Native Apps
-----------------------------
-
-Even though many container workloads are stateless, backup matters in Kubernetes! Think about it, with a single ``kubectl`` command you could wipe out an entire namespace containing multiple applications. Restoring workloads to a specific point in time needs to be equally as easy. In addition, backup can also be a critical component of regulatory compliance.
-
-In this exercise we will deploy **Kasten K10**, a **Veeam** solution that integrates with **Nutanix Objects** to provide Kubernetes backup capabilities.
-
-Configuring Objects Storage
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-In order to provide a storage target for our backup solution, we will add another **Bucket** within our pre-staged **Nutanix Objects Object Store**.
-#. In **Prism Central**, select :fa:`bars` **> Services > Objects**.
-
-#. Under **Object Stores**, open your existing Object Store in a new tab.
-
-   .. figure:: media/80.png
-
--  Click on Create Bucket
-
-   -  Name : k10backup-*yourinitials*
-
-   -  Check Enable versioning
-
-   -  Click create
-
--  Click on the newly created bucket
-
--  Go to User Access on the left / Edit User Access
-
--  Search for people your-initial@demo.com
-
--  Check permission Read and Write / Save
-
-Installing K10
-~~~~~~~~~~~~~~
-
-Up to this point, we have used manually created manifest files to deploy our applications. For **K10** we will look at a more user friendly way to deploy apps using **Helm**. `Helm <https://helm.sh/>`_ is a community built and maintained package management tool for Kubernetes, similar to **yum** in CentOS or **npm** in Node.
-
-#. On your Jumphost, run the following:
-
-   .. code-block:: bash
-
-      kubectl create namespace kasten-io
-      helm repo add kasten https://charts.kasten.io/
-      helm repo update
-      helm install k10 kasten/k10 --namespace=kasten-io --set externalGateway.create=true --set auth.tokenAuth.enabled=true
-
-   This will define a namespace on the **Kubernetes** cluster in which to manage and monitor the app, add the repository to **Helm** in order to download **K10**, and then install the application.
-
-#. Monitor the deployment in **Lens > Workloads > Pods**.
-
-   Select the **kasten-io** namespace and wait until all Pods are in a **Running** state, this should take < 5 minutes.
-
-   .. note::
-
-      You may need to close/re-open **Lens** in order to see the new **kasten-io** namespace.
-
-   if you don´t installed **Lens** you could also use:
-   .. code-block:: bash
-
-      kubectl get pods -n kasten-io
-
-   Similar to our other deployments, external access to the **K10** frontend is possible via LoadBalancer. This time it was setup automatically by Helm. 
-
-   Before accessing the GUI we need to fetch the neccessary AuthToken from automatically created Admin-Accoung (k10-k10):
-   ..code-block:: bash
-      sa_secret=$(kubectl get serviceaccount k10-k10 -o jsonpath="{.secrets[0].name}" --namespace kasten-io)
-      kubectl get secret $sa_secret --namespace kasten-io -ojsonpath="{.data.token}{'\n'}" | base64 --decode
-
-   Copy the displayed Auth-Token, we will need it to access the GUI
-
-   Retrieve the External-IP address of the deployment
-
-   .. code-block:: Bash 
-    
-      k get services -n kasten-io
-
-   Open a new tab and use the following Address: 
-      http://SERVICE_EXTERNAL_IP/k10/#/
-
-   If your deployment was successful, you have to paste the AuthToken and SignIn, afterwards you will be prompted with the EULA.
-
-
-Configuring K10
-~~~~~~~~~~~~~~~
-
-Now that we have prepared our storage target and deployed **K10**, we're ready to configure **K10** to use our Objects storage and create our first backup policy.
-
-#. In your browser, **Accept** the **K10** EULA.
-
-   .. note::
-
-      If prompted to **Take a Quick Tour**, click **No**.
-
-   You should now see the **K10** dashboard, including multiple applications that have already been discovered on your cluster.
-
-#. Click **Settings**.
-
-   .. figure:: media/93b.png
-
-#. Under **Location Profiles**, click **+New Profile**.
-
-#. Fill out the following fields:
-
-   - **Profile Name** - nutanix-objects
-   - **Cloud Storage Provider** - S3 Compatible
-   - **S3 Access Key** - *From your Credentials txt file downloaded from Objects*
-   - **S3 Secret** - *From your Credentials txt file downloaded from Objects*
-   - **Endpoint** - https://*PublicIPofYourObjectsStore*
-   - Select **Skip certificate chain and hostname verification**
-   - **Region** - *Leave blank*
-   - **Bucket Name** - k10backup-*yourinitials*
-
-#. Click **Save Profile**.
-
-   You should see a green dialog indicating the connection was successful. Otherwise, ensure your profile inputs are accurate and try saving again.
-
-   Next we'll configure a backup policy.
-
-#. Click **< Dashboard** to return to the **K10** dashboard.
-
-   .. figure:: media/96.png
-
-#. Under **Applications**, select **Unmanaged**.
-
-#. Under **default**, click **Create Policy**.
-
-   .. figure:: media/97.png
-
-   Each of the boxes map to a specific Namespace in your Kubernetes cluster.
-
-#. In the **New Policy** window, leave all of the default snapshot frequency settings.
-
-#. Select **Enable Backups via Snapshot Exports** and ensure **Export Location Profile** is set to your **nutanix-objects** profile.
-
-   .. figure:: media/98.png
-
-   This will export the snapshots created by K10 to your S3 bucket.
-
-#. Click **Create Policy**.
-
-   Instead of waiting for the next scheduled snapshot to take place, we'll force the first backup.
-
-#. Click **Run Once** and **Run Policy**.
-
-   .. figure:: media/99.png
-
-#. Click **< Dashboard**.
-
-#. Under **Activity**, you should see your backup job complete after a few seconds. Select it and view the resources that were exported as part of the backup.
-
-   .. figure:: media/100.png
-
-Restoring K10 Backups
-~~~~~~~~~~~~~~~~~~~~~
-
-Now that we have a successful backup, we can restore "clones" of your applications to a separate namespace on the cluster.
-
-#. Select **Applications** from the **K10** dashboard.
-
-#. Under the **default** namespace, click **Restore**.
-
-   .. figure:: media/101.png
-
-#. Select your **default-backup** restore point and then click the **EXPORTED** version.
-
-   .. figure:: media/102.png
-
-   This will ensure we're restoring the data from the Nutanix Objects bucket, and not a local snapshot.
-
-#. Under **Restore Point > Application Name**, click **+ Create A New Namespace**:
-
-   - **New Namespace** - default-restore
-
-   .. figure:: media/103.png
-
-   This will update the **Application Name** to your new namespace.
-
-#. Under **Restore Point > Artifacts**, click **Deselect All Artifacts**.
-
-#. Select only your **nextcloud** Deployment and your **nextcloud** Service.
-
-   .. figure:: media/104.png
-
-#. Click the **Restore > Restore** button to start the restore process.
-
-   .. note::
-
-      You may see a *Slow Connection* message pop up. This can be safely ignored.
-
-#. Click **< Dashboard** to return to the dashboard.
-
-   Under **Activity**, you should see your restore operation either **Running** or **Completed**.
-
-   .. figure:: media/105.png
-
-#. In **Lens > Workloads > Pods**, filter for your **default-restore** namespace and observe your NextCloud pod running.
-
-   .. figure:: media/106.png
-
-   *Based on what you've learned so far in the lab, can you build a Traefik route to connect to your default-restore version of your app?*
-
-#. Return to **Prism Central >** :fa:`bars` **> Services > Objects > ntnx-objects** and click your bucket.
-
-   Here you can view the number of objects stored within the bucket and the storage being consumed.
-
-#. Select **Performance** from the left-hand menu to view the load your backup policy has applied to the bucket.
-
-   .. figure:: media/107.png
-
-#. You can also view the bucket contents using the built-in Objects Browser by opening \http://*<OBJECT-STORE-PUBLIC-IP>*:7200 in your browser and logging in with the keys assigned to your **user**\ *##*\ **-k10** user.
-
-   .. figure:: media/108.png
-
-   .. note::
-
-      The snapshot exports from **K10** aren't human readable, so don't expect to find your original **YAML** files!
-
-.. raw:: html
-
-After completing these exercises you should now be more familiar with the infrastructure considerations for production Kubernetes environments.
-
-Nutanix Karbon provides significant value in the deployment and management of your Kubernetes infrastructure, while still providing an open platform capable of integrating with other stack components for logging, monitoring, backup, and more.
 
 
 
