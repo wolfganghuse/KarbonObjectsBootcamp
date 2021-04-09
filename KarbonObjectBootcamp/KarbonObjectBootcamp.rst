@@ -639,7 +639,7 @@ Up to this point, we have used manually created manifest files to deploy our app
       kubectl create namespace kasten-io
       helm repo add kasten https://charts.kasten.io/
       helm repo update
-      helm install k10 kasten/k10 --namespace=kasten-io --set externalGateway.create=true
+      helm install k10 kasten/k10 --namespace=kasten-io --set externalGateway.create=true --set auth.tokenAuth.enabled=true
 
    This will define a namespace on the **Kubernetes** cluster in which to manage and monitor the app, add the repository to **Helm** in order to download **K10**, and then install the application.
 
@@ -658,15 +658,24 @@ Up to this point, we have used manually created manifest files to deploy our app
 
    Similar to our other deployments, external access to the **K10** frontend is possible via LoadBalancer. This time it was setup automatically by Helm. 
 
+   Before accessing the GUI we need to create a Service Account and fetch the neccessary AuthToken:
+   ..code-block:: bash
+      k create serviceaccount my-kasten-sa --namespace kasten-io
+      sa_secret=$(kubectl get serviceaccount my-kasten-sa -o jsonpath="{.secrets[0].name}" --namespace kasten-io)
+      kubectl get secret $sa_secret --namespace kasten-io -ojsonpath="{.data.token}{'\n'}" | base64 --decode
+
+   Copy the displayed Auth-Token, we will need it to access the GUI
+
    Retrieve the External-IP address of the deployment
 
    .. code-block:: Bash 
     
-      k get services
+      k get services -n kasten-io
 
-   Open a new tab and type the external-ip address.
+   Open a new tab and use the following Address: 
+      http://SERVICE_EXTERNAL_IP/k10/#/
 
-   If your deployment was successful, you will be prompted with the EULA.
+   If your deployment was successful, you have to paste the AuthToken and SignIn, afterwards you will be prompted with the EULA.
 
 
 Configuring K10
@@ -805,8 +814,6 @@ Now that we have a successful backup, we can restore "clones" of your applicatio
       The snapshot exports from **K10** aren't human readable, so don't expect to find your original **YAML** files!
 
 .. raw:: html
-
-    <H1><a href="http://lookup.ntnxworkshops.com/" target="_blank"><font color="#B0D235"><center>Click Here To Submit Validation Request</center></font></a></H1>
 
 After completing these exercises you should now be more familiar with the infrastructure considerations for production Kubernetes environments.
 
