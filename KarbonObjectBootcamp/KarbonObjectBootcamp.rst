@@ -567,14 +567,17 @@ Up to this point, we have used manually created manifest files to deploy our app
       You may need to close/re-open **Lens** in order to see the new **kasten-io** namespace.
 
    if you don´t installed **Lens** you could also use:
-   .. code-block:: bash
+   
+   .. code-block:: Bash
 
       kubectl get pods -n kasten-io
 
    Similar to our other deployments, external access to the **K10** frontend is possible via LoadBalancer. This time it was setup automatically by Helm. 
 
    Before accessing the GUI we need to fetch the neccessary AuthToken from automatically created Admin-Accoung (k10-k10):
-   ..code-block:: bash
+   
+   ..code-block:: Bash
+
       sa_secret=$(kubectl get serviceaccount k10-k10 -o jsonpath="{.secrets[0].name}" --namespace kasten-io)
       kubectl get secret $sa_secret --namespace kasten-io -ojsonpath="{.data.token}{'\n'}" | base64 --decode
 
