@@ -790,7 +790,7 @@ Now that we have a successful backup, we can restore "clones" of your applicatio
 
    .. figure:: media/105.png
 
-#. In **Lens > Workloads > Pods**, filter for your **default-restore** namespace and observe your Fiesta pods running.
+#. In **Lens > Workloads > Pods**, filter for your **default-restore** namespace and observe your NextCloud pod running.
 
    .. figure:: media/106.png
 
