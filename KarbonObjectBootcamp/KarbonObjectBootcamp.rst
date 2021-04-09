@@ -613,7 +613,7 @@ In order to provide a storage target for our backup solution, we will add anothe
 
 -  Click on Create Bucket
 
-   -  Name : nextcloud-yourinitials
+   -  Name : k10backup-yourinitials
 
    -  Check Enable versioning
 
@@ -627,94 +627,12 @@ In order to provide a storage target for our backup solution, we will add anothe
 
 -  Check permission Read and Write / Save
 
-Configuring DNS
-...............
-
-In order for our **K10** application to connect to our Objects bucket as a storage target, it needs to be able to access the bucket via DNS, not IP address. To do this we will need to add the appropriate DNS record for our bucket to the **NTNXLAB.local** DNS server, and update our Karbon cluster to use that DNS server.
-
-#. In **Prism Central**, select :fa:`bars` **> Services > Objects**.
-
-#. Note your **Objects Public IP**. This is the IP used to create client connections to your bucket via S3 APIs.
-
-   .. figure:: media/83.png
-
-   You will need this IP in the following steps.
-
-#. Paste the following into your **USER**\ *##*\ **-WinToolsVM** and replace *<YOUR-BUCKET-NAME>* and *<OBJECTS-PUBLIC-IP>* with your values:
-
-   .. code-block:: powershell
-
-      Invoke-Command -ComputerName dc.ntnxlab.local -ScriptBlock {Add-DnsServerResourceRecordA -Name "ntnx-objects" -ZoneName "ntnxlab.local" -AllowUpdateAny -IPv4Address "<OBJECTS-PUBLIC-IP>"}
-      Invoke-Command -ComputerName dc.ntnxlab.local -ScriptBlock {Add-DnsServerResourceRecordA -Name "<YOUR-BUCKET-NAME>.ntnx-objects" -ZoneName "ntnxlab.local" -AllowUpdateAny -IPv4Address "<OBJECTS-PUBLIC-IP>"}
-
-#. Run the commands in **PowerShell**.
-
-   .. figure:: media/84.png
-
-   This will create a **ntnx-objects** subdomain, which corresponds to the name of your Object Store, and a DNS A record for your bucket.
-
-   .. note::
-
-      If the command fails to authenticate to **dc.ntnxlab.local**, you are likely logged into your **USER**\ *##*\ **-WinToolsVM** VM as the **local** Administrator account. You need to be logged in as **NTNXLAB\\Administrator**.
-
-      If the first command fails with **Failed to create resource record ntnx-objects in zone ntnxlab.local on server DC**, this is OK. It means that someone else on your cluster has already run the command to create the subdomain.
-
-#. Run ``ping <YOUR-BUCKET-NAME>.ntnx-objects.ntnxlab.local`` to verify you can resolve the name.
-
-   .. note::
-
-      If you are unable to ping your entry and believe you have made a typo, you can remove your A Record by running the command below and then attempt to re-add.
-
-      ``Invoke-Command -ComputerName dc.ntnxlab.local -ScriptBlock {Remove-DnsServerResourceRecord -Name "<YOUR-BUCKET-NAME>.ntnx-objects" -ZoneName "ntnxlab.local" -RRType "A"}``
-
-      *Or* you launch **Administrative Tools > DNS Manager** from your **USER**\ *##*\ **-WinToolsVM** VM and connect to **DC.ntnxlab.local** to modify using the UI. *Do not modify other DNS records!*
-
-   Next we'll update the DNS configuration for the Kubernetes cluster.
-
-   .. raw:: html
-
-      <BR><font color="#FF0000"><strong>Pay close attention to the following steps. You will be editing network configuration for your Kubernetes cluster and a mistake could leave you unable to access the cluster.</strong></font><BR><BR>
-
-#. Run ``kubectl -n kube-system edit configmap coredns``.
-
-   This will open the cluster DNS **ConfigMap** in **Notepad**.
-
-#. Insert the following *before* the line **kind: ConfigMap** in the file:
-
-   .. code-block:: yaml
-
-      ntnxlab.local:53 {
-         errors
-         cache 30
-         forward . <AUTO AD Server>
-      }
-
-#. Replace *<AUTO AD Server>* with the IP of your **NTNXLAB.local** Domain Controller. See :ref:`clusterdetails`.
-
-#. Ensure the indentation of the **YAML** file is correct. After pasting the contents into the file, each line should be indented by 4 spaces from the left edge, as shown below.
-
-   .. figure:: media/85.png
-
-#. Save the file and close **Notepad**.
-
-   .. note::
-
-      If you formatted the file incorrectly, the file will re-open. Refer to the screenshot above to correct your indentation.
-
-#. Run ``kubectl -n kube-system describe configmap coredns`` to verify the configuration has been updated.
-
-   .. figure:: media/86.png
-
-   This will tell the DNS service in Kubernetes to forward DNS requests **ntnxlab.local** (and any subdomains) to your Domain Controller's IP address, allowing the **K10** application to resolve the name of your bucket.
-
-   *Isn't networking fun?!*
-
 Installing K10
 ..............
 
 Up to this point, we have used manually created manifest files to deploy our applications. For **K10** we will look at a more user friendly way to deploy apps using **Helm**. `Helm <https://helm.sh/>`_ is a community built and maintained package management tool for Kubernetes, similar to **yum** in CentOS or **npm** in Node.
 
-#. In **PowerShell**, run the following:
+#. On your Jumphost, run the following:
 
    .. code-block:: bash
 
