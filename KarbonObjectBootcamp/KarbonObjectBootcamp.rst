@@ -65,7 +65,7 @@ Objects
 -------
 
 -  With Google Chrome, **connect** to the **Prism Central** (as provided
-   in Ressources lab document), click on the\ |image4| Burger Menu,click 
+   in Ressources lab document), click on the |image4| Burger Menu,click 
    **Services**, click **Objects**
 -  Click **Create Object Store** / Continue
 -  Enter an object store name based as provided in Ressources lab
@@ -395,7 +395,7 @@ Nutanix Object creation
 
 Return to the prism central interface
 
--  Click on the Burger / Service / Object
+-  Click on the |image4| **> Service > Object**
 
 -  Generate an access key by clicking on Access Keys on the top / Add
    People / Add people not in a directory service
@@ -745,7 +745,7 @@ good overview of the Nutanix solution.
 Check Karbon scale-out
 ~~~~~~~~~~~~~~~~~~~~~~
 
--  On Prism Central \ |image4| **> Service > Karbon**
+-  On Prism Central |image4| **> Service > Karbon**
 
 -  Click on your cluster / Nodes on the left side / + Add Worker and add
    1 additional node (please don’t do more than one to keep resources
@@ -756,7 +756,7 @@ Check Karbon scale-out
 Check Karbon ElasticSearch / Kibana logging stack
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
--  On Prism Central \ |image4| **> Service > Karbon**
+-  On Prism Central |image4| **> Service > Karbon**
 
 -  Click on your cluster / Add-on / Logging
 
