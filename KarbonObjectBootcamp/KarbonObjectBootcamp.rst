@@ -576,7 +576,7 @@ Up to this point, we have used manually created manifest files to deploy our app
 
    Before accessing the GUI we need to fetch the neccessary AuthToken from automatically created Admin-Accoung (k10-k10):
    
-   ..code-block:: Bash
+   .. code-block:: Bash
 
       sa_secret=$(kubectl get serviceaccount k10-k10 -o jsonpath="{.secrets[0].name}" --namespace kasten-io)
       kubectl get secret $sa_secret --namespace kasten-io -ojsonpath="{.data.token}{'\n'}" | base64 --decode
