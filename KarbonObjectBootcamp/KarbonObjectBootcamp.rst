@@ -745,7 +745,7 @@ good overview of the Nutanix solution.
 Check Karbon scale-out
 ~~~~~~~~~~~~~~~~~~~~~~
 
--  On Prism Central / Burger / Service / Karbon
+-  On Prism Central \ |image4| **/ Service / Karbon**
 
 -  Click on your cluster / Nodes on the left side / + Add Worker and add
    1 additional node (please don’t do more than one to keep resources
@@ -756,7 +756,7 @@ Check Karbon scale-out
 Check Karbon ElasticSearch / Kibana logging stack
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
--  On Prism Central / Burger / Service / Karbon
+-  On Prism Central \ |image4| **/ Service / Karbon**
 
 -  Click on your cluster / Add-on / Logging
 
