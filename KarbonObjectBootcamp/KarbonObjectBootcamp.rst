@@ -595,7 +595,7 @@ To graphically manage the K8S cluster, the LENS IDE can be used.
 -  You’ll now see all K8S ressources graphically.
 
 Backing Up Cloud Native Apps
-++++++++++++++++++++++++++++
+----------------------------
 
 Even though many container workloads are stateless, backup matters in Kubernetes! Think about it, with a single ``kubectl`` command you could wipe out an entire namespace containing multiple applications. Restoring workloads to a specific point in time needs to be equally as easy. In addition, backup can also be a critical component of regulatory compliance.
 
