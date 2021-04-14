@@ -335,19 +335,73 @@ Browser Tab:
 NextCloud deployment
 --------------------
 
--  Create a new nextcloud deployment
+-  Create a new File **nextcloud.yaml** containing the following Code:
 
 .. code-block:: Bash
     
     
-    k create deployment nextcloud --image=registry.gitlab.com/fabrice.krebs/nutanix-ch/nextcloud
+    kapiVersion: v1
+    kind: PersistentVolumeClaim
+    metadata:
+      name: nextcloud-shared-storage-claim
+      labels:
+        app: nextcloud
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 10Gig
+    ---
+    
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: nextcloud-server
+      labels:
+        app: nextcloud
+    spec:
+      replicas: 1
+      selector:
+        matchLabels:
+          pod-label: nextcloud-server-pod
+      template:
+        metadata:
+          labels:
+            pod-label: nextcloud-server-pod
+        spec:
+          containers:
+          - name: nextcloud
+            image: nextcloud:16-apache
+            volumeMounts:
+            - name: server-storage
+              mountPath: /var/www/html
+              subPath: server-data
+          volumes:
+          - name: server-storage
+            persistentVolumeClaim:
+              claimName: nextcloud-shared-storage-claim
+    ---
+    apiVersion: v1
+    kind: Service
+    metadata:
+      name: nextcloud-server
+      labels:
+        app: nextcloud
+    spec:
+      selector:
+        pod-label: nextcloud-server-pod
+      type: LoadBalancer
+      ports:
+      - protocol: TCP
+        port: 80
+    
 
-Expose the new deployment to the public network
+Deploy the Yaml into our K8s-Cluster. This will create a Volume Claim, the application itself and a new network-service.
 
 .. code-block:: Bash
     
-    
-    k expose deployment nextcloud --type=LoadBalancer --name=nextcloud --port=80 --target-port=80
+    k apply -f nextcloud.yaml
 
 Retrieve the External-IP address of the deployment
 
