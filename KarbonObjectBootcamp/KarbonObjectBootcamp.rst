@@ -575,7 +575,7 @@ Up to this point, we have used manually created manifest files to deploy our app
    
    .. code-block:: Bash
 
-      kubectl get pods -n kasten-io
+      watch kubectl get pods -n kasten-io
 
    Similar to our other deployments, external access to the **K10** frontend is possible via LoadBalancer. This time it was setup automatically by Helm. 
 
@@ -734,6 +734,12 @@ Now that we have a successful backup, we can restore "clones" of your applicatio
       The snapshot exports from **K10** aren't human readable, so don't expect to find your original **YAML** files!
 
 .. raw:: html
+
+   .. hint::
+
+   Price Question: What is the IP of the restored Nextcloud-Application?
+
+
 
 After completing these exercises you should now be more familiar with the infrastructure considerations for production Kubernetes environments.
 
