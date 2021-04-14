@@ -16,9 +16,9 @@ import sphinx_rtd_theme
 
 # -- Project information -----------------------------------------------------
 
-project = 'Core Bootcamp'
-copyright = 'Nutanix Switzerland'
-author = 'Oliver Graf'
+project = 'Karbon Objects Era Bootcamp'
+copyright = 'Nutanix GmbH'
+author = 'Wolfgang Huse'
 
 
 # The full version, including alpha/beta/rc tags
