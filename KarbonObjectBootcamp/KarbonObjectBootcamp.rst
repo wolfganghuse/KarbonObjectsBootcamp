@@ -64,25 +64,25 @@ indicated how to get it on the documentation when needed.
 Objects
 -------
 
+
 -  With Google Chrome, **connect** to the **Prism Central** (as provided
    in Ressources lab document), click on the |image4| Burger Menu,click 
    **Services**, click **Objects**
 -  Click **Create Object Store** / Continue
 -  Enter an object store name based as provided in Ressources lab
    document / next
+-  use **ntnxlab.local** as Domain
 -  Select performance (Estimated) to Custom. It will deploy a very small
    object instance to save cluster resources for other LAB
    participants.(don’t change vCPU or Memory)
 -  Set 100 GiB as capacity / Next
 -  Select **your corresponding** Nutanix Cluster
--  Select Managed-Network for both Object Infra Network and Objects
+-  Select Primary for both Object Infra Network and Objects
    Public Network. Enter the Objects Infra IPs and Object Public IPs
    with the information provided in Ressources lab document. 
 
-.. hint::
 
-    The creation of an object store is time-consuming and not feasible 
-    in this time with parallel staging
+
 
 Karbon/Kubernetes Cluster
 -------------------------
@@ -100,7 +100,7 @@ Karbon/Kubernetes Cluster
 
 -  **Node Configuration**
 
-   -  Select the network named Managed-Network
+   -  Select the network named Primary
 
    -  Enter a master VIP Address (as provided in Ressources lab
       document) / Next
@@ -121,10 +121,15 @@ Karbon/Kubernetes Cluster
    -  Select once again **your corresponding** Nutanix Cluster
 
    -  Enter the cluster username (admin) and password (Nutanix Password
-      in the ressources lab document) / Create. Click only once on
-      the create button, and wait the popup to be closed, otherwise,
-      you’ll deploy multiple time the cluster and the deployment will
-      fail!!!
+      in the ressources lab document) / Create. 
+   -  Choose Storage Container Name **Default**
+
+.. hint::
+
+   Click only once on
+   the create button, and wait the popup to be closed, otherwise,
+   you’ll deploy multiple time the cluster and the deployment will
+   fail!!!
 
 .. hint::
 
@@ -151,7 +156,7 @@ Era
 
    -  Compute Profile : DEFAULT_OOB_COMPUTE
 
-   -  Network Profile : MariaNW
+   -  Network Profile : DEFAULT_OOB_MARIADB_NETWORK
 
    -  SSH KEY : Select Text, and copy paste the following string (it’s a
       one line text!)
@@ -824,6 +829,37 @@ Clone the MariaDB Database
 
 For Instructors
 ===============
+
+Jumphost
+
+.. code-block:: Bash
+
+   #cloud-config
+   ssh_pwauth: True
+   password: nutanix/4u
+   users:
+   - default
+   - name: nutanix
+      gecos: nutanix
+      groups: sudo
+      sudo: ALL=(ALL) ALL
+      shell: /bin/bash
+      lock-passwd: false
+      passwd: "$6$.GZntFwVt$FBjD2TaUERX37wh7tk8uUcdHQgbfbOKczZQyxMm9oEhOLeFfxX/DTYMDNZpZkPHHDwi4m7GtgGH/bWtAYD2zN0"
+      #password nutanix/4u
+   chpasswd: { expire: False }
+   yum_repos:
+      kubernetes:
+         baseurl: https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64
+         enabled: true
+         failovermethod: priority
+         gpgcheck: true
+         gpgkey: https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+         name: kubernetes
+   runcmd:
+   - sudo yum install -y kubectl nano
+   - sudo curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
+   final_message: "cloud-config completed"
 
 Link to Lab
 -----------
