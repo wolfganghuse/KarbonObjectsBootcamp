@@ -604,6 +604,13 @@ In order to provide a storage target for our backup solution, we will add anothe
 Installing K10
 ~~~~~~~~~~~~~~
 
+As in the actual Karbon-Version is a issue regarding Volume-Snapshots we need to patch the CSI-Driver, future Versions will already have this fix applied:
+
+.. code-block:: Bash
+
+   k apply -f https://github.com/nutanix/csi-plugin/releases/download/v2.3.1/snapshot-crd-2.3.1.yaml
+   k apply -f https://github.com/nutanix/csi-plugin/releases/download/v2.3.1/karbon-fix-snapshot-2.3.1.yaml
+
 Up to this point, we have used manually created manifest files to deploy our applications. For **K10** we will look at a more user friendly way to deploy apps using **Helm**. `Helm <https://helm.sh/>`_ is a community built and maintained package management tool for Kubernetes, similar to **yum** in CentOS or **npm** in Node.
 
 #. On your Jumphost, run the following:
