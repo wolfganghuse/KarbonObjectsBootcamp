@@ -830,7 +830,7 @@ Clone the MariaDB Database
 For Instructors
 ===============
 
-Jumphost
+Jumphost:
 
 .. code-block:: Bash
 
