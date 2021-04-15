@@ -611,6 +611,26 @@ As in the actual Karbon-Version is a issue regarding Volume-Snapshots we need to
    k apply -f https://github.com/nutanix/csi-plugin/releases/download/v2.3.1/snapshot-crd-2.3.1.yaml
    k apply -f https://github.com/nutanix/csi-plugin/releases/download/v2.3.1/karbon-fix-snapshot-2.3.1.yaml
 
+Create the Default VolumeSnapshotClass
+
+.. code-block:: Bash
+
+   #!/usr/bin/bash
+   SECRET=$(kubectl get sc -o=jsonpath='{.items[?(@.metadata.annotations.storageclass\.kubernetes\.io\/is-default-class=="true")].parameters.csi\.storage\.k8s\.io\/provisioner-secret-name}')
+
+   cat <<EOF | kubectl apply -f -
+   apiVersion: snapshot.storage.k8s.io/v1beta1
+   kind: VolumeSnapshotClass
+   metadata:
+   name: default-snapshotclass
+   driver: csi.nutanix.com
+   parameters:
+   storageType: NutanixVolumes
+   csi.storage.k8s.io/snapshotter-secret-name: $SECRET
+   csi.storage.k8s.io/snapshotter-secret-namespace: kube-system
+   deletionPolicy: Delete
+   EOF
+
 Up to this point, we have used manually created manifest files to deploy our applications. For **K10** we will look at a more user friendly way to deploy apps using **Helm**. `Helm <https://helm.sh/>`_ is a community built and maintained package management tool for Kubernetes, similar to **yum** in CentOS or **npm** in Node.
 
 #. On your Jumphost, run the following:
@@ -618,6 +638,7 @@ Up to this point, we have used manually created manifest files to deploy our app
    .. code-block:: bash
 
       kubectl create namespace kasten-io
+      kubectl annotate volumesnapshotclass default-snapshotclass k10.kasten.io/is-snapshot-class=true
       helm repo add kasten https://charts.kasten.io/
       helm repo update
       helm install k10 kasten/k10 --namespace=kasten-io --set externalGateway.create=true --set auth.tokenAuth.enabled=true
